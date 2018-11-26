@@ -1,5 +1,16 @@
-#NoEnv
-#Warn
+cron_status := StdOutStream("wsl service cron status")
+ssh_status := StdOutStream("wsl service ssh status")
 
-Run,wsl cd /home/hongyu/tmp; echo 1122 | sudo -S service cron start,,Hide UseErrorLevel,OutputVarPID
-Run,wsl cd /home/hongyu/tmp; echo 1122 | sudo -S service ssh start,,Hide UseErrorLevel,OutputVarPID
+while(!InStr(cron_status, "running")  && A_Index < 10)
+{
+    Run,wsl echo 1122 | sudo -S service cron start,,Hide UseErrorLevel,OutputVarPID
+    Sleep, 10000
+    cron_status := StdOutStream("wsl service cron status")
+}
+
+while(!InStr(ssh_status, "running") && A_Index < 10)
+{
+    Run,wsl echo 1122 | sudo -S service ssh start,,Hide UseErrorLevel,OutputVarPID
+    Sleep, 10000
+    ssh_status := StdOutStream("wsl service ssh status")
+}
