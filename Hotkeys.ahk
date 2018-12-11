@@ -592,6 +592,13 @@ Hotkey_typing()
     return
 }
 
+~ESC::
+Hotkey_esc()
+{
+    SetCapsLockState, OFF
+    return
+}
+
 F1 & h::
 Hotkey_F1_h()
 {
