@@ -9,6 +9,7 @@ MouseGesture_(hoveredHwnd,ClassNN)
 
 MouseGesture_1(hoveredHwnd,ClassNN,xPos,yPos)
 {
+    /*
     WinGetPos,,winY,,,% hoveredHwnd
     WinGetClass,ProcessClass,% hoveredHwnd
     if(yPos-winY<30&&ProcessClass~="CabinetWClass")
@@ -19,6 +20,7 @@ MouseGesture_1(hoveredHwnd,ClassNN,xPos,yPos)
         WindowStyle.Show(SubStr(hoveredHwnd,7))
     else
         ContextMenu.Show()
+     */
     return
 }
 
@@ -116,11 +118,11 @@ MouseGesture_R(hoveredHwnd)
     ClipWait,0
     if(clipboard!="")
         if(Gesture.SearchEngine == 1)
-            Run,% "www.bing.com/search?&q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+            Run,% "www.bing.com/search?&q=" . ReplaceURL(clipboard),,UseErrorLevel
         else if(Gesture.SearchEngine==2)
-            Run,% "www.baidu.com/s?ie=utf-8&wd=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+            Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(clipboard),,UseErrorLevel
         else
-            Run,% "www.google.com/search?q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+            Run,% "www.google.com/search?q=" . ReplaceURL(clipboard),,UseErrorLevel
     else if(currentProcessName~="chrome.exe|360chrome.exe")
         SendInput,^t
     else

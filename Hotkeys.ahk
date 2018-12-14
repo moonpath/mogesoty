@@ -453,11 +453,11 @@ Hotkey_s()
     Send ^c
     ClipWait,0
     if(Gesture.SearchEngine == 1)
-        Run,% "www.bing.com/search?&q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+        Run,% "www.bing.com/search?&q=" . ReplaceURL(clipboard),,UseErrorLevel
     else if(Gesture.SearchEngine==2)
-        Run,% "www.baidu.com/s?ie=utf-8&wd=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+        Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(clipboard),,UseErrorLevel
     else
-        Run,% "www.google.com/search?q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(clipboard,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+        Run,% "www.google.com/search?q=" . ReplaceURL(clipboard),,UseErrorLevel
     return
 }
 

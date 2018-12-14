@@ -1,6 +1,6 @@
 ;<Initialization>=======================================================
-FileAttribMenu:=new FileAttribMenu()
-WindowStyle:=new WindowStyle()
+;FileAttribMenu:=new FileAttribMenu()
+;WindowStyle:=new WindowStyle()
 ContextMenu:=new ContextMenu()
 ;</Initialization>======================================================
 Goto,FunctionsEnd ;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -114,6 +114,11 @@ ShutDown()
 {
     Run,%Comspec% /c "Shutdown /s /hybrid /f /t 0",,Hide UseErrorLevel
     return
+}
+
+ReplaceURL(command)
+{
+    return SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(command,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128)
 }
 ;</Functions>===========================================================
 
@@ -799,11 +804,11 @@ class MCA
             if(ErrorLevel="ERROR")
             {
                 if(Gesture.SearchEngine == 1)
-                    Run,% "www.bing.com/search?&q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(command,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+                    Run,% "www.bing.com/search?&q=" . ReplaceURL(command),,UseErrorLevel
                 else if(Gesture.SearchEngine==2)
-                    Run,% "www.baidu.com/s?ie=utf-8&wd=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(command,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+                    Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(command),,UseErrorLevel
                 else
-                    Run,% "www.google.com/search?q=" . SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(command,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128),,UseErrorLevel
+                    Run,% "www.google.com/search?q=" . ReplaceURL(command),,UseErrorLevel
                 while(A_Index<=5)
                 {
                     flag:=A_Index
