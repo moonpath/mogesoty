@@ -196,6 +196,9 @@ Hotkey_d()
 {
     WinGet,Hwnd,ID,A
     WinGet,processName,ProcessName,% "ahk_id" . Hwnd
+    WinGet,processPath,ProcessPath,% "ahk_id" . Hwnd
+    Run,Explorer /select`,%processPath%,,UseErrorLevel,OutputVarPID
+    /*
     if(processName!="explorer.exe")
     {
         WinGet,processPath,ProcessPath,% "ahk_id" . Hwnd
@@ -208,6 +211,7 @@ Hotkey_d()
             FileGetShortcut,% SelectedFile,SelectedFile
         Run,Explorer /select`,%SelectedFile%,,UseErrorLevel,OutputVarPID
     }
+    */
     return
 }
 
@@ -596,6 +600,7 @@ Hotkey_typing()
 Hotkey_esc()
 {
     SetCapsLockState, OFF
+    SetCapsLockState, AlwaysOFF
     return
 }
 

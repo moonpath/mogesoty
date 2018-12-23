@@ -298,8 +298,8 @@ class Hotkey
         BoundUnMask := this.UnMask.bind(this)
         BoundKeyRecognition:= this.KeyRecognition.bind(this)
         BoundKeyCompensation := this.KeyCompensation.bind(this)
-        Hotkey, +Capslock,% BoundUnMask
-        Hotkey, Capslock & Shift,% BoundUnMask
+        Hotkey, !Capslock,% BoundUnMask
+        Hotkey, Capslock & Alt,% BoundUnMask
         for i,v in keyList
         {
             Hotkey, %v%,% BoundMask
