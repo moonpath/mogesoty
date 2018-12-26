@@ -333,6 +333,14 @@ Hotkey_g(Count := 1)
     return
 }
 
+#if GetKeyState("Shift", "P")
+Capslock & h::
+Hotkey_capslock_h()
+{
+    SendInput, {Home}
+}
+
+#if
 Capslock & h::
 Hotkey_h()
 {
@@ -347,6 +355,14 @@ Hotkey_i()
     return
 }
 
+#if GetKeyState("Shift", "P")
+Capslock & j::
+Hotkey_capslock_j()
+{
+    SendInput, {PgDn}
+}
+
+#if
 Capslock & j::
 Hotkey_j()
 {
@@ -354,6 +370,14 @@ Hotkey_j()
     return
 }
 
+#if GetKeyState("Shift", "P")
+Capslock & k::
+Hotkey_capslock_k()
+{
+    SendInput, {PgUp}
+}
+
+#if
 Capslock & k::
 Hotkey_k()
 {
@@ -361,7 +385,14 @@ Hotkey_k()
     return
 }
 
+#if GetKeyState("Shift", "P")
 Capslock & l::
+Hotkey_capslock_l()
+{
+    SendInput, {End}
+}
+
+#if
 Hotkey_l()
 {
     SendInput,{Right}
@@ -403,12 +434,6 @@ Hotkey_m()
     return
 }
 
-Capslock & n::
-Hotkey_n()
-{
-    SendInput, {PgDn}
-}
-
 Capslock & o::
 Hotkey_o()
 {
@@ -418,7 +443,9 @@ Hotkey_o()
 Capslock & p::
 Hotkey_p()
 {
-    SendInput, {PgUp}
+    clipboard := RTrim(RTrim(clipboard, "`n"), "`r")
+    SendInput, +{Insert}
+    return
 }
 
 Capslock & q::
@@ -469,14 +496,6 @@ Capslock & Space::
 Hotkey_Space()
 {
     SendInput,{Media_Play_Pause}
-    return
-}
-
-Capslock & u::
-Hotkey_u()
-{
-    clipboard := RTrim(RTrim(clipboard, "`n"), "`r")
-    SendInput, +{Insert}
     return
 }
 
