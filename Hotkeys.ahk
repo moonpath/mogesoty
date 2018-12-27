@@ -492,9 +492,9 @@ Hotkey_ShiftWheelDown()
 Capslock & T::
 Hotkey_t()
 {
-    EnvGet, USERPROFILE, USERPROFILE
-    Run, "Plugins\Busybox\busybox64.exe" "sh",% USERPROFILE, UseErrorLevel
+    Run, %comspec% /c "title BusyBox & cd /d "`%USERPROFILE`%" & "%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
 }
+
 
 Capslock & u::
 Hotkey_u()
