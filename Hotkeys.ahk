@@ -82,8 +82,8 @@ Hotkey_Alt_Win_F6()
     return
 }
 
-Capslock & 0::
-Hotkey_0()
+Capslock & `::
+Hotkey_screen()
 {
     BlockInput,On
     SendMessage, 0x112, 0xF170, 2,, Program Manager
@@ -132,6 +132,24 @@ Hotkey_6()
 {
     Component.RunPlugin("Navigation\Navigation.ahk")
     return
+}
+
+Capslock & 9::
+Hotkey_9()
+{
+    if(GetKeyState("Shift", "P"))
+        SendInput, {Raw}{
+    else
+        SendInput, [
+}
+
+Capslock & 0::
+Hotkey_0()
+{
+    if(GetKeyState("Shift", "P"))
+        SendInput, {Raw}}
+    else
+        SendInput, ]
 }
 
 Capslock & a::
