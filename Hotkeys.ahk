@@ -218,16 +218,18 @@ Hotkey_d()
 Capslock & e::
 Hotkey_e()
 {
-    WinGet,PID,PID,A
-    WinGet,ProcessName,ProcessName,ahk_pid %PID%
-    Process,Close,%PID%
-    if(ErrorLevel==0)
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
     {
-        Main.LogToFile("Kill " . ProcessName . " Failed")
-        TrayTip,,Process Termination Failed,,3
-        return
+        WinGet,PID,PID,A
+        WinGet,ProcessName,ProcessName,ahk_pid %PID%
+        Process,Close,%PID%
+        if(ErrorLevel==0)
+        {
+            Main.LogToFile("Kill " . ProcessName . " Failed")
+            TrayTip,,Process Termination Failed,,3
+            return
+        }
     }
-    return
 }
 
 Capslock & PgUp::
@@ -333,105 +335,82 @@ Hotkey_g(Count := 1)
     return
 }
 
-#if GetKeyState("Shift", "P")
 Capslock & h::
 Hotkey_capslock_h()
 {
-    SendInput, {Home}
-}
-
-#if
-Capslock & h::
-Hotkey_h()
-{
-    SendInput,{Left}
-    return
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+        SendInput, {Home}
+    else
+        SendInput,{Left}
 }
 
 Capslock & i::
 Hotkey_i()
 {
     SendInput, |
-    return
 }
 
-#if GetKeyState("Shift", "P")
 Capslock & j::
 Hotkey_capslock_j()
 {
-    SendInput, {PgDn}
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+        SendInput, {PgDn}
+    else
+        SendInput, {Down}
 }
 
-#if
-Capslock & j::
-Hotkey_j()
-{
-    SendInput,{Down}
-    return
-}
-
-#if GetKeyState("Shift", "P")
 Capslock & k::
 Hotkey_capslock_k()
 {
-    SendInput, {PgUp}
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+        SendInput, {PgUp}
+    else
+        SendInput, {Up}
 }
 
-#if
-Capslock & k::
-Hotkey_k()
-{
-    SendInput,{Up}
-    return
-}
-
-#if GetKeyState("Shift", "P")
 Capslock & l::
 Hotkey_capslock_l()
 {
-    SendInput, {End}
-}
-
-#if
-Hotkey_l()
-{
-    SendInput,{Right}
-    return
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+        SendInput, {End}
+    else
+        SendInput, {Right}
 }
 
 Capslock & Left::
 Hotkey_Left()
 {
     SendInput,{Media_Prev}
-    return
 }
 
 Capslock & Right::
 Hotkey_Right()
 {
     SendInput,{Media_Next}
-    return
 }
 
 Capslock & Up::
 Hotkey_Up()
 {
     SoundSet +2
-    return
 }
 
 Capslock & Down::
 Hotkey_Down()
 {
     SoundSet -2
-    return
 }
 
 Capslock & m::
 Hotkey_m()
 {
-    SendInput, _
-    return
+    SendInput, {Raw}+
+}
+
+Capslock & Esc::
+Hotkey_media_play_pause()
+{
+    SendInput,{Media_Play_Pause}
 }
 
 Capslock & o::
@@ -458,23 +437,25 @@ Hotkey_q()
 Capslock & r::
 Hotkey_r()
 {
-    WinGet,PID,PID,A
-    WinGet,ProcessPath,ProcessPath,ahk_pid %PID%
-    WinGet,ProcessName,ProcessName,ahk_pid %PID%
-    Process,Close,%PID%
-    Loop,10
+    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
     {
-        Sleep,1000
-        Process,Exist,%PID%
-        if(ErrorLevel==0)
+        WinGet,PID,PID,A
+        WinGet,ProcessPath,ProcessPath,ahk_pid %PID%
+        WinGet,ProcessName,ProcessName,ahk_pid %PID%
+        Process,Close,%PID%
+        Loop,10
         {
-            Run,%ProcessPath%,,UseErrorLevel
-            return
+            Sleep,1000
+            Process,Exist,%PID%
+            if(ErrorLevel==0)
+            {
+                Run,%ProcessPath%,,UseErrorLevel
+                return
+            }
         }
+        Main.LogToFile("Restart " . ProcessName . " Failed")
+        TrayTip,,Restart Failed,,3
     }
-    Main.LogToFile("Restart " . ProcessName . " Failed")
-    TrayTip,,Restart Failed,,3
-    return
 }
 
 Capslock & s::
@@ -492,13 +473,6 @@ Hotkey_s()
     return
 }
 
-Capslock & Space::
-Hotkey_Space()
-{
-    SendInput,{Media_Play_Pause}
-    return
-}
-
 CapsLock & WheelUp::
 Hotkey_ShiftWheelUp()
 {
@@ -512,6 +486,37 @@ Hotkey_ShiftWheelDown()
 {
     Loop,2
         SendInput,{PgDn}
+    return
+}
+
+Capslock & T::
+Hotkey_t()
+{
+    EnvGet, USERPROFILE, USERPROFILE
+    Run, "Plugins\Busybox\busybox64.exe" "sh",% USERPROFILE, UseErrorLevel
+}
+
+Capslock & u::
+Hotkey_u()
+{
+    KeyWait, Capslock
+    KeyWait, u
+    ToolTip, Receiving...,,,2
+    input, unicode, L4, {Space}
+    unicode := Trim(unicode)
+    if(unicode != "")
+    {
+        ToolTip, Applied, , ,2
+        SendInput, {U+%unicode%}
+        Sleep, 500
+        ToolTip, , , ,2
+    }
+    else
+    {
+        ToolTip, Error, , ,2
+        Sleep, 500
+        ToolTip, , , ,2
+    }
     return
 }
 
@@ -559,7 +564,7 @@ Hotkey_fun()
             paramsArray.Push(A_LoopField)
     if(IsFunc("MouseGesture_" . funName)&&Asc(funName)>=65&&Asc(funName)<=90)
     {
-        ToolTip,Apply,,,2
+        ToolTip,Applied,,,2
         MouseGesture_%funName%(paramsArray*)
         Sleep,500
         ToolTip,,,,2
@@ -608,11 +613,12 @@ Hotkey_back_slash()
     return
 }
 
+~Lshift & Rshift::
+~Rshift & Lshift::
 Capslock & `;::
 Hotkey_typing()
 {
     SendInput, ^{Space}
-    return
 }
 
 ~ESC::

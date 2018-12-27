@@ -298,8 +298,8 @@ class Hotkey
         BoundUnMask := this.UnMask.bind(this)
         BoundKeyRecognition:= this.KeyRecognition.bind(this)
         BoundKeyCompensation := this.KeyCompensation.bind(this)
-        Hotkey, !Capslock,% BoundUnMask
-        Hotkey, Capslock & Alt,% BoundUnMask
+        ;Hotkey, !Capslock,% BoundUnMask
+        Hotkey, Capslock & Space,% BoundUnMask
         for i,v in keyList
         {
             Hotkey, %v%,% BoundMask
@@ -817,7 +817,7 @@ class TrayMenu
 
     WindowSpy()
     {
-        Run,% A_workingdir . "\Bin\AU3_Spy.exe",% A_workingdir,UserErrorLevel
+        Run,% A_workingdir . "\AU3_Spy.exe",% A_workingdir,UserErrorLevel
         return
     }
 
