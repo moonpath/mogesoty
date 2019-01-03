@@ -2,7 +2,7 @@ SetWorkingDir %A_ScriptDir%
 Gui,New,,Keypass
 Gui,+AlwaysOnTop
 Gui,Add,ListView,AltSubmit r20 w250 gMyListView,Name|Account|Password
-Loop,read,Keypass.db,Keypass.psw
+Loop,read,Keypass.pwd
 {
     OutputArray:=[]
     Loop,parse,A_LoopReadLine,CSV

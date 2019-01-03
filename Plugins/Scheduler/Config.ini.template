@@ -1,7 +1,8 @@
 [Monitor]
 WindowDetector=1
 NetworkDetector=0
-
+PowerManager=1
+ReminderDetector=0
 
 [WindowDetector]
 MouseGestures=1
@@ -15,3 +16,6 @@ InternetStatus=1
 EthernetStatus=1
 RunTimeStatus=1
 IdleStatus=1
+
+[PowerManager]
+Idle=1

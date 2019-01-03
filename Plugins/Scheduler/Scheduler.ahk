@@ -15,14 +15,19 @@ Main()
 {
     IniRead,WindowDetector,Config.ini,Monitor,WindowDetector,0
     IniRead,NetworkDetector,Config.ini,Monitor,NetworkDetector,0
-    IniRead,WindowRecorder,Config.ini,Monitor,WindowRecorder,0
-    IniRead,ReminderEnabled,Config.ini,Monitor,ReminderEnabled,0
+    IniRead,PowerManager,Config.ini,Monitor,PowerManager,0
+    IniRead,ReminderDetector,Config.ini,Monitor,ReminderDetector,0
     if(WindowDetector="1")
         new Windows()
 
     if(NetworkDetector="1")
         new Network()
-    return
+
+    if(PowerManager="1")
+        new Power()
+
+    if(ReminderDetector="1")
+        new ReminderCheck()
 }
 
 SendMessage(ByRef StringToSend, ByRef TargetScriptTitle)
@@ -58,6 +63,36 @@ class Scheduler
 
     SchedulerDetector()
     {
+    }
+}
+
+class Power
+{
+    __new()
+    {
+        IniRead,Idle,Config.ini,PowerManager,Idle,0
+        Power.Idle:=Idle
+        BoundPowerDetector:=Power.PowerDetector.bind(PowerDetector)
+        SetTimer,% BoundPowerDetector,60000
+        return this
+    }
+
+    PowerDetector()
+    {
+        if(Power.Idle)
+            Power.IdleDetector()
+    }
+
+    IdleDetector()
+    {
+        if(A_TimeIdlePhysical > 10*60*1000 && A_Hour > 0 && A_Hour < 7)
+        {
+            ToolTip,% "Your computer will be shutdown for idle too long time."
+            Sleep 60000
+            LogToFile("Shutdown By PowerManager")
+            Shutdown, 9
+            ExitApp
+        }
     }
 }
 
