@@ -17,6 +17,7 @@ Main()
     IniRead,NetworkDetector,Config.ini,Monitor,NetworkDetector,0
     IniRead,PowerManager,Config.ini,Monitor,PowerManager,0
     IniRead,ReminderDetector,Config.ini,Monitor,ReminderDetector,0
+    IniRead,InfoDetector,Config.ini,Monitor,InfoDetector,0
     if(WindowDetector="1")
         new Windows()
 
@@ -28,6 +29,9 @@ Main()
 
     if(ReminderDetector="1")
         new ReminderCheck()
+
+    if(InfoDetector == "1")
+        new Info()
 }
 
 SendMessage(ByRef StringToSend, ByRef TargetScriptTitle)
@@ -50,6 +54,117 @@ LogToFile(event)
 {
     SendMessage("LogToFile,""" . event . """", ASSEMBLYPRODUCT . "ahk_class AutoHotkey")
     return
+}
+
+class Info
+{
+    __new()
+    {
+        this.pre_icon_hwnds := []
+        this.last_time := -10000000
+        this.notify := new this.Notify()
+        BoundInfoReminder := this.judge.bind(this)
+        BoundInfoShow := this.show.bind(this)
+        SetTimer, % BoundInfoReminder, 1500 
+        return this
+    }
+
+    show()
+    {
+        if (A_TickCount - this.last_time < 5000 && A_TickCount - this.notify.click_time > 1000000)
+            this.notify.show()
+        else
+            this.notify.hide()
+    }
+
+    judge()
+    {
+        icon_hwnds := this.get_icon_hwnds()
+        for key, value in icon_hwnds 
+            if(this.pre_icon_hwnds[key] != "" && this.pre_icon_hwnds[key] != value || value == 0)
+                this.last_time := A_TickCount
+        this.pre_icon_hwnds := icon_hwnds
+
+        if (A_TickCount - this.last_time < 1500 && A_TickCount - this.notify.click_time > 1000000)
+            this.notify.show()
+        else
+            this.notify.hide()
+    }
+
+    get_icon_hwnds()
+    {
+        icons := TrayIcon_GetInfo()
+        icon_hwnds := []
+        Loop, % icons.MaxIndex()
+        {
+            process_name := icons[A_Index].process
+            if (process_name ~= "QQ.exe|TIM.exe|WeChatStore.exe|WXWork.exe")
+                icon_hwnds[process_name] := icons[A_Index].hicon
+        }
+        return icon_hwnds
+    }
+
+    class Notify
+    {
+        __new()
+        {
+            If !pToken := Gdip_Startup()
+                MsgBox, 48, gdiplus error!
+            Width := 65, Height := 65
+            Gui, 1: -Caption +E0x80000 +LastFound +AlwaysOnTop +ToolWindow +OwnDialogs +HwndthisHwnd
+            Gui, 1: Show, NA
+            Gui, 1: Hide
+            hwnd := WinExist()
+
+            hbm := CreateDIBSection(Width, Height)
+            hdc := CreateCompatibleDC()
+            obm := SelectObject(hdc, hbm)
+            G := Gdip_GraphicsFromHDC(hdc)
+            Gdip_SetSmoothingMode(G, 4)
+
+            pBrush := Gdip_BrushCreateSolid(0x77222222)
+            cBrush := Gdip_BrushCreateSolid(0x77CCCCCC)
+
+            Gdip_FillRoundedRectangle(G, cBrush, 0, 0, 55, 55, 10)
+            Gdip_FillRoundedRectangle(G, cBrush, 10, 10, 55, 55, 10)
+
+            Gdip_DeleteBrush(pBrush)
+            Gdip_DeleteBrush(cBrush)
+
+            UpdateLayeredWindow(hwnd, hdc, A_ScreenWidth - (A_ScreenWidth-Width)//8, (A_ScreenHeight-Height)//8, Width, Height)
+
+            OnMessage(0x201, this.WM_LBUTTONDOWN.bind(this))
+            OnMessage(0x203, this.WM_LBUTTONDBLCLK.bind(this))
+
+            SelectObject(hdc, obm)
+            DeleteObject(hbm)
+            DeleteDC(hdc)
+            Gdip_DeleteGraphics(G)
+
+            this.click_time := -10000000
+            return this
+        }
+
+        WM_LBUTTONDOWN()
+        {
+            PostMessage, 0xA1, 2
+        }
+
+        WM_LBUTTONDBLCLK()
+        {
+            this.click_time := A_TickCount
+        }
+
+        hide()
+        {
+            Gui, 1: Hide
+        }
+
+        show()
+        {
+            Gui, 1: Show, NA
+        }
+    }
 }
 
 class Scheduler
