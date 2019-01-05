@@ -620,39 +620,111 @@ Hotkey_typing()
     SendInput, ^{Space}
 }
 
+F1 & h::
+hotkey_f1h()
+{
+    times := 0
+    while(True)
+    {
+        key1_status := GetKeyState("F1", "P")
+        key2_status := GetKeyState("h", "P")
+        if (!key1_status || !key2_status)
+            break
+        if (times < 15)
+            times++
+        move_step := times >= 15 ? 50 : exp(sqrt(times))
+        sleep_time := times >= 15 ? 20 : 50 - 2*times
+        MouseMove,% -move_step, 0, 0, R
+        Sleep,% sleep_time
+    }
+}
+
+F1 & l::
+hotkey_f1l()
+{
+    times := 0
+    while(True)
+    {
+        key1_status := GetKeyState("F1", "P")
+        key2_status := GetKeyState("l", "P")
+        if (!key1_status || !key2_status)
+            break
+        if (times < 15)
+            times++
+        move_step := times >= 15 ? 50 : exp(sqrt(times))
+        sleep_time := times >= 15 ? 20 : 50 - 2*times
+        MouseMove,% move_step, 0, 0, R
+        Sleep,% sleep_time
+    }
+}
+
+F1 & j::
+hotkey_f1j()
+{
+    times := 0
+    while(True)
+    {
+        key1_status := GetKeyState("F1", "P")
+        key2_status := GetKeyState("j", "P")
+        if (!key1_status || !key2_status)
+            break
+        if (times < 15)
+            times++
+        move_step := times >= 15 ? 50 : exp(sqrt(times))
+        sleep_time := times >= 15 ? 20 : 50 - 2*times
+        MouseMove,0, % move_step, 0, R
+        Sleep,% sleep_time
+    }
+}
+
+F1 & k::
+hotkey_f1k()
+{
+    times := 0
+    while(True)
+    {
+        key1_status := GetKeyState("F1", "P")
+        key2_status := GetKeyState("k", "P")
+        if (!key1_status || !key2_status)
+            break
+        if (times < 15)
+            times++
+        move_step := times >= 15 ? 50 : exp(sqrt(times))
+        sleep_time := times >= 15 ? 20 : 50 - 2*times
+        MouseMove,0, % -move_step, 0, R
+        Sleep,% sleep_time
+    }
+}
+
+F1 & F2::
+hotkey_f1lbd()
+{
+    SendInput, {LButton Down}
+}
+
+F1 & F2 Up::
+hotkey_f1lbu()
+{
+    SendInput, {LButton Up}
+}
+
+F1 & F3::
+hotkey_f1rbd()
+{
+    SendInput, {RButton Down}
+}
+
+F1 & F3 Up::
+hotkey_f1rbu()
+{
+    SendInput, {RButton Up}
+}
+
 ~ESC::
 Hotkey_esc()
 {
     SetCapsLockState, OFF
     SetCapsLockState, AlwaysOFF
-    return
-}
-
-F1 & h::
-Hotkey_F1_h()
-{
-    SendInput, -
-    return
-}
-
-F1 & j::
-Hotkey_F1_j()
-{
-    SendInput, _
-    return
-}
-
-F1 & k::
-Hotkey_F1_k()
-{
-    SendInput, =
-    return
-}
-
-F1 & l::
-Hotkey_F1_l()
-{
-    SendInput, {Raw}+
     return
 }
 
