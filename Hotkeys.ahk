@@ -83,55 +83,36 @@ Hotkey_Alt_Win_F6()
 }
 
 Capslock & `::
-Hotkey_screen()
+Hotkey_start()
 {
-    BlockInput,On
-    SendMessage, 0x112, 0xF170, 2,, Program Manager
-    Sleep,2000
-    BlockInput,Off
-    return
+    input, key, L1, {Enter}
+    if(key == "0")
+    {
+        BlockInput,On
+        SendMessage, 0x112, 0xF170, 2,, Program Manager
+        Sleep,2000
+        BlockInput,Off
+    }
+    else if(key == "1")
+        Component.RunPlugin("KeyRecord\KeyRecord.ahk")
+    else if(key == "2")
+        Component.RunPlugin("Draw\Draw.ahk")
+    else if(key == "3")
+        Component.RunPlugin("Keypass\Keypass.ahk")
+    else if(key == "4")
+        Component.RunPlugin("HotStrings\HotStrings.ahk")
+    else if(key == "5")
+        Component.RunPlugin("WindowInfo\WindowInfo.ahk")
+    else if(key == "6")
+        Component.RunPlugin("Navigation\Navigation.ahk")
+    else
+        SendInput,% key
 }
 
-Capslock & 1::
-Hotkey_1()
+Capslock & 8::
+Hotkey_8()
 {
-    Component.RunPlugin("KeyRecord\KeyRecord.ahk")
-    return
-}
-
-Capslock & 2::
-Hotkey_2()
-{
-    Component.RunPlugin("Draw\Draw.ahk")
-    return
-}
-
-Capslock & 3::
-Hotkey_3()
-{
-    Component.RunPlugin("Keypass\Keypass.ahk")
-    return
-}
-
-Capslock & 4::
-Hotkey_4()
-{
-    Component.RunPlugin("HotStrings\HotStrings.ahk")
-    return
-}
-
-Capslock & 5::
-Hotkey_5()
-{
-    Component.RunPlugin("WindowInfo\WindowInfo.ahk")
-    return
-}
-
-Capslock & 6::
-Hotkey_6()
-{
-    Component.RunPlugin("Navigation\Navigation.ahk")
-    return
+    SendInput, {Raw}+
 }
 
 Capslock & 9::
