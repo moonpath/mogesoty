@@ -696,24 +696,40 @@ hotkey_f1k()
     }
 }
 
+F1 & p::
+hotkey_f1p()
+{
+    MouseClick, wheelup,,, 1, 0, D
+}
+
+F1 & n::
+hotkey_f1n()
+{
+    MouseClick, wheeldown,,, 1, 0, D
+}
+
+F1 & i::
 F1 & F2::
 hotkey_f1lbd()
 {
     SendInput, {LButton Down}
 }
 
+F1 & i Up::
 F1 & F2 Up::
 hotkey_f1lbu()
 {
     SendInput, {LButton Up}
 }
 
+F1 & o::
 F1 & F3::
 hotkey_f1rbd()
 {
     SendInput, {RButton Down}
 }
 
+F1 & o Up::
 F1 & F3 Up::
 hotkey_f1rbu()
 {
