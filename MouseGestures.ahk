@@ -33,21 +33,21 @@ MouseGesture_2(hoveredHwnd,ClassNN,xPos,yPos)
 MouseGesture_L1()
 {
     SendInput,{Lbutton Up}
-    Hotkey,WheelDown,Hotkey_Down,On
-    Hotkey,WheelUp,Hotkey_Up,On
+    Hotkey,WheelDown,Hotkey_sound_down,On
+    Hotkey,WheelUp,Hotkey_sound_up,On
     KeyWait,Lbutton,T10
-    Hotkey,WheelDown,Hotkey_Down,Off
-    Hotkey,WheelUp,Hotkey_Up,Off
+    Hotkey,WheelDown,Hotkey_sound_down,Off
+    Hotkey,WheelUp,Hotkey_sound_up,Off
 }
 
 MouseGesture_L2()
 {
     SendInput,{Lbutton Up}
-    Hotkey,WheelDown,Hotkey_Down,On
-    Hotkey,WheelUp,Hotkey_Up,On
+    Hotkey,WheelDown,Hotkey_sound_down,On
+    Hotkey,WheelUp,Hotkey_sound_up,On
     KeyWait,``,T10
-    Hotkey,WheelDown,Hotkey_Down,Off
-    Hotkey,WheelUp,Hotkey_Up,Off
+    Hotkey,WheelDown,Hotkey_sound_down,Off
+    Hotkey,WheelUp,Hotkey_sound_up,Off
 }
 
 MouseGesture_L()

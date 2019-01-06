@@ -214,8 +214,8 @@ Hotkey_d()
     return
 }
 
-Capslock & e::
-Hotkey_e()
+Capslock & Esc::
+Hotkey_quit()
 {
     if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
     {
@@ -229,6 +229,8 @@ Hotkey_e()
             return
         }
     }
+    else
+        Send !{F4}
 }
 
 Capslock & PgUp::
@@ -376,40 +378,34 @@ Hotkey_capslock_l()
         SendInput, {Right}
 }
 
-Capslock & Left::
-Hotkey_Left()
+Capslock & =::
+Hotkey_sound_up()
 {
-    SendInput,{Media_Prev}
+    if(GetKeyState("Shift", "P"))
+        SendInput,{Media_Next}
+    else
+        SoundSet +2
 }
 
-Capslock & Right::
-Hotkey_Right()
+Capslock & -::
+Hotkey_sound_down()
 {
-    SendInput,{Media_Next}
+    if(GetKeyState("Shift", "P"))
+        SendInput,{Media_Prev}
+    else
+        SoundSet -2
 }
 
-Capslock & Up::
-Hotkey_Up()
+Capslock & BackSpace::
+Hotkey_media_play_pause()
 {
-    SoundSet +2
-}
-
-Capslock & Down::
-Hotkey_Down()
-{
-    SoundSet -2
+    SendInput,{Media_Play_Pause}
 }
 
 Capslock & m::
 Hotkey_m()
 {
     SendInput, {Raw}+
-}
-
-Capslock & Esc::
-Hotkey_media_play_pause()
-{
-    SendInput,{Media_Play_Pause}
 }
 
 Capslock & o::
@@ -423,13 +419,6 @@ Hotkey_p()
 {
     clipboard := RTrim(RTrim(clipboard, "`n"), "`r")
     SendInput, +{Insert}
-    return
-}
-
-Capslock & q::
-Hotkey_q()
-{
-    Send !{F4}
     return
 }
 
@@ -621,14 +610,15 @@ Hotkey_typing()
 }
 
 F1 & h::
-hotkey_f1h()
+F1 & Left::
+Capslock & Left::
+hotkey_mouse_left()
 {
     times := 0
     while(True)
     {
-        key1_status := GetKeyState("F1", "P")
-        key2_status := GetKeyState("h", "P")
-        if (!key1_status || !key2_status)
+        keys_status := StrSplit(A_ThisHotkey, "&", " ")
+        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
             break
         if (times < 15)
             times++
@@ -640,14 +630,15 @@ hotkey_f1h()
 }
 
 F1 & l::
-hotkey_f1l()
+F1 & Right::
+Capslock & Right::
+hotkey_mouse_right()
 {
     times := 0
     while(True)
     {
-        key1_status := GetKeyState("F1", "P")
-        key2_status := GetKeyState("l", "P")
-        if (!key1_status || !key2_status)
+        keys_status := StrSplit(A_ThisHotkey, "&", " ")
+        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
             break
         if (times < 15)
             times++
@@ -659,14 +650,15 @@ hotkey_f1l()
 }
 
 F1 & j::
-hotkey_f1j()
+F1 & Down::
+Capslock & Down::
+hotkey_mouse_down()
 {
     times := 0
     while(True)
     {
-        key1_status := GetKeyState("F1", "P")
-        key2_status := GetKeyState("j", "P")
-        if (!key1_status || !key2_status)
+        keys_status := StrSplit(A_ThisHotkey, "&", " ")
+        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
             break
         if (times < 15)
             times++
@@ -678,14 +670,15 @@ hotkey_f1j()
 }
 
 F1 & k::
-hotkey_f1k()
+F1 & Up::
+Capslock & Up::
+hotkey_mouse_up()
 {
     times := 0
     while(True)
     {
-        key1_status := GetKeyState("F1", "P")
-        key2_status := GetKeyState("k", "P")
-        if (!key1_status || !key2_status)
+        keys_status := StrSplit(A_ThisHotkey, "&", " ")
+        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
             break
         if (times < 15)
             times++
@@ -697,43 +690,49 @@ hotkey_f1k()
 }
 
 F1 & p::
-hotkey_f1p()
+Capslock & q::
+hotkey_mouse_wheelup()
 {
-    MouseClick, wheelup,,, 1, 0, D
+    Click WheelUp
 }
 
 F1 & n::
-hotkey_f1n()
+Capslock & z::
+hotkey_mouse_wheeldown()
 {
-    MouseClick, wheeldown,,, 1, 0, D
+    Click WheelDown
 }
 
 F1 & i::
 F1 & F2::
-hotkey_f1lbd()
+Capslock & w::
+hotkey_mouse_lbutton_down()
 {
-    SendInput, {LButton Down}
+    Click Left Down
 }
 
 F1 & i Up::
 F1 & F2 Up::
-hotkey_f1lbu()
+Capslock & w Up::
+hotkey_mouse_lbutton_up()
 {
-    SendInput, {LButton Up}
+    Click Left Up
 }
 
 F1 & o::
 F1 & F3::
-hotkey_f1rbd()
+Capslock & e::
+hotkey_mouse_rbutton_donw()
 {
-    SendInput, {RButton Down}
+    Click Right Down
 }
 
 F1 & o Up::
 F1 & F3 Up::
-hotkey_f1rbu()
+Capslock & e Up::
+hotkey_mouse_rbutton_up()
 {
-    SendInput, {RButton Up}
+    Click Right Up
 }
 
 ~ESC::
