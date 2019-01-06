@@ -15,20 +15,23 @@ ShellMessage(wParam,lParam)
 {
     if(wParam=1 && WinExist("ahk_id" . lParam)) ;HSHELL_WINDOWCREATED
     {
+        WinGetClass, current_class, A
+        if(current_class == "ForegroundStaging")
+            return
         SysGet,monitorCount,MonitorCount
         if(MonitorCount<=1)
             return
         showArea:=[],mouseIndex:=1
-      WinGetPos,winXPos,winYPos,winWidth,winHeight,ahk_id %lParam%
-      if(!winXPos || !winYPos || !winWidth || !winHeight)
-      {
+        WinGetPos,winXPos,winYPos,winWidth,winHeight,ahk_id %lParam%
+        if(!winXPos || !winYPos || !winWidth || !winHeight)
+        {
           WinWaitActive,ahk_id %lParam%,,0
           WinGetPos,winXPos,winYPos,winWidth,winHeight,ahk_id %lParam%
         }
-      WinGetTitle,winTitle,ahk_id %lParam%
-      if(!winTitle) ;Ignore special windows
+        WinGetTitle,winTitle,ahk_id %lParam%
+        if(!winTitle) ;Ignore special windows
           return
-      MouseGetPos,mouseXPos,mouseYPos
+        MouseGetPos,mouseXPos,mouseYPos
         Loop,%monitorCount%
         {
             SysGet,monitorSize%A_Index%,Monitor,%A_Index%
@@ -88,6 +91,5 @@ ShellMessage(wParam,lParam)
             }
         }
     }
-    return
 }
 ;</MultipleMonitor>================================================

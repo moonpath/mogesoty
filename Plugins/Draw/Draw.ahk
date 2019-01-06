@@ -48,6 +48,8 @@ class Draw
         SysGet, SM_YVIRTUALSCREEN, 77
         SysGet, SM_CXVIRTUALSCREEN, 78
         SysGet, SM_CYVIRTUALSCREEN, 79
+        this.SM_XVIRTUALSCREEN := SM_XVIRTUALSCREEN
+        this.SM_YVIRTUALSCREEN := SM_YVIRTUALSCREEN
         Gui, Trail:Show, x%SM_XVIRTUALSCREEN% y%SM_YVIRTUALSCREEN% w%SM_CXVIRTUALSCREEN% h%SM_CYVIRTUALSCREEN% NA
         return this
     }
@@ -103,11 +105,12 @@ class Draw
         MouseGetPos, cur_x, cur_y
         if((this.pre_x-cur_x)**2+(this.pre_y-cur_y)**2 <= 1**2)
             return
+        tooltip,% cur_x
         hDC := DllCall("GetDC", UInt, this.trailHWnd)
         hCurrPen := DllCall("CreatePen", UInt, 0, UInt, this.trailWidth, UInt, this.trailcolor)
         DllCall("SelectObject", UInt,hdc, UInt,hCurrPen)
-        DllCall("gdi32.dll\MoveToEx", UInt, hdc, Uint,this.pre_x, Uint, this.pre_y, Uint, 0)
-        DllCall("gdi32.dll\LineTo", UInt, hdc, Uint, cur_x, Uint, cur_y)
+        DllCall("gdi32.dll\MoveToEx", UInt, hdc, Uint,this.pre_x-this.SM_XVIRTUALSCREEN, Uint, this.pre_y-this.SM_YVIRTUALSCREEN, Uint, 0)
+        DllCall("gdi32.dll\LineTo", UInt, hdc, Uint, cur_x-this.SM_XVIRTUALSCREEN, Uint, cur_y-this.SM_YVIRTUALSCREEN)
         DllCall("ReleaseDC", UInt, 0, UInt, hDC)
         DllCall("DeleteObject", UInt,hCurrPen)
         this.pre_x := cur_x

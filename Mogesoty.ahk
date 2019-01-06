@@ -459,6 +459,8 @@ class Gesture
             SysGet, SM_YVIRTUALSCREEN, 77
             SysGet, SM_CXVIRTUALSCREEN, 78
             SysGet, SM_CYVIRTUALSCREEN, 79
+            this.SM_XVIRTUALSCREEN := SM_XVIRTUALSCREEN
+            this.SM_YVIRTUALSCREEN := SM_YVIRTUALSCREEN
             Gui,% this.index . ":Show", x%SM_XVIRTUALSCREEN% y%SM_YVIRTUALSCREEN% w%SM_CXVIRTUALSCREEN% h%SM_CYVIRTUALSCREEN% NA
             BoundDrawLine := this.BoundDrawLine
             SetTimer, %BoundDrawLine%, 10
@@ -489,8 +491,8 @@ class Gesture
                     hDC := DllCall("GetDC", UInt, this.trailHWnd)
                     hCurrPen := DllCall("CreatePen", UInt, 0, UInt, this.trailWidth, UInt, this.trailcolor)
                     DllCall("SelectObject", UInt, hDC, UInt, hCurrPen)
-                    DllCall("MoveToEx", UInt, hDc, Uint, this.pre_x, Uint, this.pre_y, Uint, 0)
-                    DllCall("LineTo", UInt, hDc, Uint, cur_x, Uint, cur_y)
+                    DllCall("MoveToEx", UInt, hDc, Uint, this.pre_x-this.SM_XVIRTUALSCREEN, Uint, this.pre_y-this.SM_YVIRTUALSCREEN, Uint, 0)
+                    DllCall("LineTo", UInt, hDc, Uint, cur_x-this.SM_XVIRTUALSCREEN, Uint, cur_y-this.SM_YVIRTUALSCREEN)
                     DllCall("ReleaseDC", UInt, 0, UInt, hDC)
                     DllCall("DeleteObject", UInt, hCurrPen)
                     this.pre_x := cur_x
