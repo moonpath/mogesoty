@@ -402,12 +402,6 @@ Hotkey_media_play_pause()
     SendInput,{Media_Play_Pause}
 }
 
-Capslock & m::
-Hotkey_m()
-{
-    SendInput, {Raw}+
-}
-
 Capslock & o::
 Hotkey_o()
 {
@@ -603,7 +597,6 @@ Hotkey_back_slash()
 
 ~Lshift & Rshift::
 ~Rshift & Lshift::
-Capslock & `;::
 Hotkey_typing()
 {
     SendInput, ^{Space}
@@ -611,7 +604,6 @@ Hotkey_typing()
 
 F1 & h::
 F1 & Left::
-Capslock & Left::
 hotkey_mouse_left()
 {
     times := 0
@@ -631,7 +623,6 @@ hotkey_mouse_left()
 
 F1 & l::
 F1 & Right::
-Capslock & Right::
 hotkey_mouse_right()
 {
     times := 0
@@ -651,7 +642,6 @@ hotkey_mouse_right()
 
 F1 & j::
 F1 & Down::
-Capslock & Down::
 hotkey_mouse_down()
 {
     times := 0
@@ -671,7 +661,6 @@ hotkey_mouse_down()
 
 F1 & k::
 F1 & Up::
-Capslock & Up::
 hotkey_mouse_up()
 {
     times := 0
@@ -690,14 +679,12 @@ hotkey_mouse_up()
 }
 
 F1 & p::
-Capslock & q::
 hotkey_mouse_wheelup()
 {
     Click WheelUp
 }
 
 F1 & n::
-Capslock & z::
 hotkey_mouse_wheeldown()
 {
     Click WheelDown
@@ -705,7 +692,6 @@ hotkey_mouse_wheeldown()
 
 F1 & i::
 F1 & F2::
-Capslock & w::
 hotkey_mouse_lbutton_down()
 {
     Click Left Down
@@ -713,7 +699,6 @@ hotkey_mouse_lbutton_down()
 
 F1 & i Up::
 F1 & F2 Up::
-Capslock & w Up::
 hotkey_mouse_lbutton_up()
 {
     Click Left Up
@@ -721,7 +706,6 @@ hotkey_mouse_lbutton_up()
 
 F1 & o::
 F1 & F3::
-Capslock & e::
 hotkey_mouse_rbutton_donw()
 {
     Click Right Down
@@ -729,7 +713,6 @@ hotkey_mouse_rbutton_donw()
 
 F1 & o Up::
 F1 & F3 Up::
-Capslock & e Up::
 hotkey_mouse_rbutton_up()
 {
     Click Right Up
