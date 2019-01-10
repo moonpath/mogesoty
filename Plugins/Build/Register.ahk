@@ -13,43 +13,24 @@ if(!A_IsAdmin)
     return
 }
 
-installPath := GetMainDir()
-if (installPath != "")
-{
-    Register(installPath)
-    MsgBox, Install Success!
-}
-else
-    MsgBox, Install Failed!
+SplitPath, A_AhkPath, , installPath, , processName
+Register(installPath, processName)
+MsgBox, 64, Install, Install Success!
 
-GetMainDir()
-{
-    prev_dir := A_ScriptFullPath
-    while (True)
-    {
-        SplitPath, prev_dir, , dir
-        if(FileExist(dir . "\Mogesoty.exe"))
-            return dir
-        if(prev_dir == dir)
-            return ""
-        prev_dir := dir
-    }
-}
-
-Register(installPath)
+Register(installPath, processName)
 {
     RegWrite, REG_SZ, HKEY_CLASSES_ROOT\.ahk,,ahkfile
-    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\DefaultIcon,,"%installPath%\Mogesoty.ico"
-    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\open\command,,"%installPath%\Mogesoty.exe" "`%1"
+    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\DefaultIcon,,"%installPath%\%processName%.ico"
+    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\open\command,,"%installPath%\%processName%.exe" "`%1"
     RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\edit\command,,notepad "`%1"
-    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\runas\command,,"%installPath%\Mogesoty.exe" "`%1"
+    RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\runas\command,,"%installPath%\%processName%.exe" "`%1"
     RegWrite, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\shell\Compile\command,,"%installPath%\Bin\Ahk2Exe.exe" "/in" "`%1"
-    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,DisplayIcon,"%installPath%\Mogesoty.ico"
-    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,DisplayName,Mogesoty 3.16 (64-bit)
-    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,DisplayVersion,3.16.7116.0
-    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,Publisher,A.H. Zhang
-    RegWrite, REG_DWORD, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,EstimatedSize,30205
-    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mogesoty,UninstallString,"%installPath%\Bin\Unregister.exe"
+    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,DisplayIcon,"%installPath%\%processName%.ico"
+    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,DisplayName,%processName% 3.16 (64-bit)
+    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,DisplayVersion,3.16.7116.0
+    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,Publisher,A.H. Zhang
+    RegWrite, REG_DWORD, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,EstimatedSize,30205
+    RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\%processName%,UninstallString,"%installPath%\Bin\Unregister.exe"
     FileAppend,
 (
 <?xml version="1.0" encoding="UTF-16"?>
@@ -57,8 +38,8 @@ Register(installPath)
   <RegistrationInfo>
     <Date>%A_YYYY%-%A_MM%-%A_DD%T%A_Hour%:%A_Min%:%A_Sec%.%A_MSec%</Date>
     <Author>%A_ComputerName%\%A_UserName%</Author>
-    <Description>Start Mogesoty and Skip UAC.</Description>
-    <URI>\Mogesoty</URI>
+    <Description>Start %processName% and Skip UAC.</Description>
+    <URI>\%processName%</URI>
   </RegistrationInfo>
   <Triggers>
     <LogonTrigger>
@@ -99,17 +80,17 @@ Register(installPath)
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>%installPath%\Mogesoty.exe</Command>
-      <Arguments>"%installPath%\Mogesoty.ahk" /invisible</Arguments>
+      <Command>%installPath%\%processName%.exe</Command>
+      <Arguments>"%installPath%\%processName%.ahk" /invisible</Arguments>
       <WorkingDirectory>%installPath%</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>
-),%installPath%\Mogesoty.xml
+),%installPath%\%processName%.xml
     Sleep,1000
-    Run, SCHTASKS /Create /TN Mogesoty /XML "%installPath%\Mogesoty.xml",,Hide UseErrorLevel
+    Run, SCHTASKS /Create /TN %processName% /XML "%installPath%\%processName%.xml",,Hide UseErrorLevel
     Sleep,1000
-    FileDelete,%installPath%\Mogesoty.xml
-    FileCreateShortcut,%installPath%\Mogesoty.exe,%A_DesktopCommon%\Mogesoty.lnk,%installPath%,,Mogesoty 3.16,%installPath%\Mogesoty.ico
-    FileCreateShortcut,%installPath%\Mogesoty.exe,%A_ProgramsCommon%\Mogesoty.lnk,%installPath%,,Mogesoty 3.16,%installPath%\Mogesoty.ico
+    FileDelete,%installPath%\%processName%.xml
+    FileCreateShortcut,%installPath%\%processName%.exe,%A_DesktopCommon%\%processName%.lnk,%installPath%,,%processName% 3.16,%installPath%\%processName%.ico
+    FileCreateShortcut,%installPath%\%processName%.exe,%A_ProgramsCommon%\%processName%.lnk,%installPath%,,%processName% 3.16,%installPath%\%processName%.ico
 }

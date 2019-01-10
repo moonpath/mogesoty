@@ -1,5 +1,6 @@
-GLOBAL ASSEMBLYTITLE := "Mogesoty"
-GLOBAL ASSEMBLYPRODUCT := "Mogesoty 3.16"
+SplitPath, A_AhkPath, , , , processName$
+GLOBAL ASSEMBLYTITLE := processName
+GLOBAL ASSEMBLYPRODUCT := processName . " 3.16"
 GLOBAL ASSEMBLYVERSION := "3.16.7116.0"
 
 if(!SetWorkingDir())

@@ -39,10 +39,10 @@ return
 ;<Class>================================================================
 class Main
 {
-    __new(ByRef argc := "", ByRef argv*)
+    __new(ByRef argc:="", ByRef argv*)
     {
         Menu,Tray,Icon,Shell32.dll,174
-        Menu,Tray,Tip,% this.ASSEMBLYPRODUCT
+        Menu,Tray,Tip,% this.ASSEMBLYTITLE
         
         this.config := {}
         IniRead, SectionNames, Config.ini
@@ -63,9 +63,9 @@ class Main
             ExitApp
         }
 
-        while(WinExist(this.ASSEMBLYPRODUCT))
+        while(WinExist(this.ASSEMBLYTITLE))
         {
-            SendMessage,0x02,0,0,,% this.ASSEMBLYPRODUCT
+            SendMessage,0x02,0,0,,% this.ASSEMBLYTITLE
             Sleep,1000
             if(A_Index>3)
             {
@@ -80,10 +80,7 @@ class Main
             }
         }
 
-        WinSetTitle,% "ahk_id" . A_ScriptHwnd,,% this.ASSEMBLYPRODUCT
-        WinSet,Style,-0x10000,% "ahk_id" . A_ScriptHwnd
-        WinSet,Style,-0x40000,% "ahk_id" . A_ScriptHwnd
-        WinMove,% "ahk_id" . A_ScriptHwnd,,% (A_ScreenWidth-round(A_ScreenWidth*5/8))/2,% (A_ScreenHeight-round(A_ScreenHeight*2/3))/2,% round(A_ScreenWidth*5/8),% round(A_ScreenHeight*2/3)
+        WinSetTitle,% "ahk_id" . A_ScriptHwnd,,% this.ASSEMBLYTITLE
 
         this.argc:=argc,this.argv:=argv
 
@@ -209,6 +206,13 @@ class Main
         return
     }
 
+    LogToTray(text, title:="", seconds:=0, type:=1)
+    {
+        if(title == "")
+            title := this.ASSEMBLYTITLE
+        TrayTip,% title,% text,% seconds,% type
+    }
+
     RecognizeMessage(ByRef Command)
     {
         CommandList := []
@@ -226,6 +230,8 @@ class Main
             }
             if(Function="LogToFile")
                 this.LogToFile(Parameters*)
+            else if(Function="LogToTray")
+                this.LogToTray(Parameters*)
             else if(Function="RunPlugin")
                 Component.RunPlugin(Parameters*)
             else
@@ -268,15 +274,8 @@ class Main
     {
         get
         {
-            return "Mogesoty"
-        }
-    }
-
-    ASSEMBLYPRODUCT[]
-    {
-        get
-        {
-            return "Mogesoty 3.16"
+            SplitPath, A_AhkPath, , , , process_name
+            return process_name
         }
     }
 
@@ -694,8 +693,8 @@ class TrayMenu
         Menu,Tray,UseErrorLevel
         Menu,Tray,NoStandard
 
-        Menu,Tray,Insert,1&,% Main.ASSEMBLYPRODUCT,%OpenMainWindow%
-        Menu,Tray,Default,% Main.ASSEMBLYPRODUCT
+        Menu,Tray,Insert,1&,% Main.ASSEMBLYTITLE,%OpenMainWindow%
+        Menu,Tray,Default,% Main.ASSEMBLYTITLE
         Menu,Tray,Insert,2&
         if(DllCall("GetMenuItemCount", "ptr", MenuGetHandle("Tray"))>2)
             Menu, Tray, Add

@@ -1,4 +1,4 @@
-;<Scheduler>=========================================================
+﻿;<Scheduler>=========================================================
 #NoTrayIcon
 #Persistent
 #SingleInstance Force
@@ -7,7 +7,9 @@ Sleep,1000
 
 SetWorkingDir %A_ScriptDir%
 
-GLOBAL ASSEMBLYPRODUCT := "Mogesoty 3.16"
+SplitPath, A_AhkPath, , , , process_name
+
+GLOBAL ASSEMBLYTITLE := process_name
 
 Func("Main").call()
 
@@ -20,8 +22,6 @@ Main()
     IniRead,InfoDetector,Config.ini,Monitor,InfoDetector,0
     if(WindowDetector="1")
         new Windows()
-
-    if(NetworkDetector="1")
         new Network()
 
     if(PowerManager="1")
@@ -43,7 +43,7 @@ SendMessage(ByRef StringToSend, ByRef TargetScriptTitle)
     Prev_DetectHiddenWindows := A_DetectHiddenWindows
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows On
-    SetTitleMatchMode 2
+    SetTitleMatchMode 3
     SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%
     DetectHiddenWindows %Prev_DetectHiddenWindows%
     SetTitleMatchMode %Prev_TitleMatchMode%
@@ -52,7 +52,13 @@ SendMessage(ByRef StringToSend, ByRef TargetScriptTitle)
 
 LogToFile(event)
 {
-    SendMessage("LogToFile,""" . event . """", ASSEMBLYPRODUCT . "ahk_class AutoHotkey")
+    SendMessage("LogToFile,""" . event . """", ASSEMBLYTITLE . " ahk_class AutoHotkey")
+    return
+}
+
+LogToTray(event, title:="", seconds:=0, type:=1)
+{
+    SendMessage("LogToTray,""" . event . """,""" . title . """," . seconds . "," . type, ASSEMBLYTITLE . " ahk_class AutoHotkey")
     return
 }
 
@@ -253,14 +259,14 @@ class Windows
 
         if(exist && WinExist("TeamViewer Panel"))
         {
-            SendMessage("Hotkey_Alt_Win_F5" . "," . "Off", ASSEMBLYPRODUCT . "ahk_class AutoHotkey")
+            SendMessage("Hotkey_Alt_Win_F5" . "," . "Off", ASSEMBLYTITLE . "ahk_class AutoHotkey")
             exist:=0
         }
 
         if(!exist && !WinExist("TeamViewer Panel"))
         {
             Sleep,1000
-            SendMessage("Hotkey_Alt_Win_F5" . "," . "On", ASSEMBLYPRODUCT . "ahk_class AutoHotkey")
+            SendMessage("Hotkey_Alt_Win_F5" . "," . "On", ASSEMBLYTITLE . "ahk_class AutoHotkey")
             exist:=1
         }
         return
@@ -278,9 +284,9 @@ class Windows
 
     ConfidentialDocument()
     {
-        IfWinExist,机密文档 ahk_exe explorer.exe
+        IfWinExist,hollo ahk_exe explorer.exe
         {
-            WinKill 机密文档
+            WinKill hollo
             LogToFile("Trying To Open The Confidential Document")
         }
         return
@@ -309,7 +315,7 @@ class Windows
                 Process, Close, ThunderPlatform.exe
                 if(ErrorLevel)
                 {
-                    TrayTip,Mogesoty,已为您关闭迅雷P2P上传,,1
+                    LogToTray("已为您关闭迅雷P2P上传", "", 0, 1)
                     LogToFile("Close Thunder P2P Process")
                 }
             }
@@ -358,17 +364,17 @@ class Network
         {
             failureCounter:=failureCounter+1
             LogToFile("NetWork Interruption")
-            TrayTip,Mogesoty,您的网络连接已中断,,2
+            LogToTray("您的网络连接已中断", "", 0, 2)
         }
         if(failureCounter>=6)
         {
             Run shutdown -r -f -t 80,,Hide UseErrorLevel
             LogToFile("Reboot By NetWork Interruption")
-            TrayTip,Mogesoty,您的网络出现问题，正在准备为您重启,,2
+            LogToTray("您的网络出现问题，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,您的网络出现问题，正在准备为您重启,,2
+            LogToTray("您的网络出现问题，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,您的网络出现问题，正在准备为您重启,,2
+            LogToTray("您的网络出现问题，正在准备为您重启", "", 0, 2)
             Sleep 20000
             ExitApp
         }
@@ -402,17 +408,17 @@ class Network
         {
             overtimeCounter:=overtimeCounter+1
             LogToFile("Overtime Error")
-            TrayTip,Mogesoty,计划任务超时,,2
+            LogToTray("计划任务超时", "", 0, 2)
         }
         if(overtimeCounter>=6)
         {
             Run shutdown -r -f -t 80,,Hide UseErrorLevel
             LogToFile("Reboot By Overtime Error")
-            TrayTip,Mogesoty,计划任务超时，正在准备为您重启,,2
+            LogToTray("计划任务超时，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,计划任务超时，正在准备为您重启,,2
+            LogToTray("计划任务超时，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,计划任务超时，正在准备为您重启,,2
+            LogToTray("计划任务超时，正在准备为您重启", "", 0, 2)
             Sleep 20000
             ExitApp
         }
@@ -425,11 +431,11 @@ class Network
         {
             Run shutdown -r -f -t 80,,Hide UseErrorLevel
             LogToFile("Reboot By Time Idle Error")
-            TrayTip,Mogesoty,您的电脑闲置时间过长，正在准备为您重启,,2
+            LogToTray("您的电脑闲置时间过长，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,您的电脑闲置时间过长，正在准备为您重启,,2
+            LogToTray("您的电脑闲置时间过长，正在准备为您重启", "", 0, 2)
             Sleep 20000
-            TrayTip,Mogesoty,您的电脑闲置时间过长，正在准备为您重启,,2
+            LogToTray("您的电脑闲置时间过长，正在准备为您重启", "", 0, 2)
             Sleep 20000
             ExitApp
         }
@@ -445,9 +451,9 @@ class ReminderCheck
         IniRead,Reminder,%MAINDIR%\Plugins\Reminder\Reminder.ini,Reminder,%A_MM%%A_DD%,0
         flag:=A_DetectHiddenWindows
         DetectHiddenWindows,On
-        if(Reminder && !WinExist("TaskBarReminder.ahk") && SendMessage("RunPlugin" . "," . MainDir . "\Plugins\Reminder\TaskBarReminder.ahk", ASSEMBLYPRODUCT . "ahk_class AutoHotkey") = FAIL)
+        if(Reminder && !WinExist("TaskBarReminder.ahk") && SendMessage("RunPlugin" . "," . MainDir . "\Plugins\Reminder\TaskBarReminder.ahk", ASSEMBLYTITLE . "ahk_class AutoHotkey") = FAIL)
             LogToFile("Startup Reminder Failed")
-        else if(!Reminder && WinExist("TaskBarReminder.ahk") && SendMessage("RunPlugin" . "," . MainDir . "\Plugins\Reminder\TaskBarReminder.ahk", ASSEMBLYPRODUCT . "ahk_class AutoHotkey") = FAIL)
+        else if(!Reminder && WinExist("TaskBarReminder.ahk") && SendMessage("RunPlugin" . "," . MainDir . "\Plugins\Reminder\TaskBarReminder.ahk", ASSEMBLYTITLE . "ahk_class AutoHotkey") = FAIL)
             LogToFile("Exit Of Reminder Failed")
         DetectHiddenWindows,%flag%
         return this

@@ -1,4 +1,5 @@
-GLOBAL ASSEMBLYTITLE := "Mogesoty"
+SplitPath, A_AhkPath, , , , processName
+GLOBAL ASSEMBLYTITLE := processName
 
 if(!A_IsAdmin)
 {
