@@ -22,8 +22,7 @@ hdc := CreateCompatibleDC()
 obm := SelectObject(hdc, hbm)
 G := Gdip_GraphicsFromHDC(hdc)
 Gdip_SetSmoothingMode(G, 4)
-pBrush := Gdip_BrushCreateSolid(0xAF222222)
-cBrush := Gdip_BrushCreateSolid(0x77000000)
+pBrush := Gdip_BrushCreateSolid(0xAF4169E1)
 
 p1_x:=S/2
 p1_y:=0
@@ -66,7 +65,6 @@ p4_y:=S/2-Sqrt(3)*S/12
 Gdip_FillPolygon(G, pBrush,  p1_x . "," . p1_y . "|" . p2_x . "," . p2_y . "|" . p3_x . "," . p3_y . "|" . p4_x . "," . p4_y, FillMode=0)
 
 Gdip_DeleteBrush(pBrush)
-Gdip_DeleteBrush(cBrush)
 
 UpdateLayeredWindow(hwnd1, hdc, (A_ScreenWidth-Width)/2, (A_ScreenHeight-Height)/2, Width, Height)
 
