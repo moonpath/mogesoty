@@ -1,4 +1,4 @@
-SplitPath, A_AhkPath, , , , processName$
+SplitPath, A_AhkPath, , , , processName
 GLOBAL ASSEMBLYTITLE := processName
 GLOBAL ASSEMBLYPRODUCT := processName . " 3.16"
 GLOBAL ASSEMBLYVERSION := "3.16.7116.0"
@@ -77,7 +77,7 @@ Install(installPath)
     Process, Exist, %ASSEMBLYTITLE%.exe
     if(ErrorLevel)
     {
-        Run,TaskKill /F /IM %ASSEMBLYTITLE%.exe,,Hide UseErrorLevel
+        Run,TaskKill /F /IM "%ASSEMBLYTITLE%.exe",,Hide UseErrorLevel
         if(ErrorLevel)
         {
             Gui, Hide
@@ -181,7 +181,7 @@ Register(installPath)
 </Task>
 `),`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.xml
     Sleep,1000
-    Run, SCHTASKS /Create /TN %ASSEMBLYTITLE% /XML "`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.xml",,Hide UseErrorLevel
+    Run, SCHTASKS /Create /TN "%ASSEMBLYTITLE%" /XML "`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.xml",,Hide UseErrorLevel
     Sleep,1000
     FileDelete,`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.xml
     FileCreateShortcut,`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.exe,`%A_DesktopCommon`%\%ASSEMBLYTITLE%.lnk,`%installPath`%\%ASSEMBLYTITLE%,,%ASSEMBLYPRODUCT%,`%installPath`%\%ASSEMBLYTITLE%\%ASSEMBLYTITLE%.ico

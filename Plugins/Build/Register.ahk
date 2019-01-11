@@ -88,7 +88,7 @@ Register(installPath, processName)
 </Task>
 ),%installPath%\%processName%.xml
     Sleep,1000
-    Run, SCHTASKS /Create /TN %processName% /XML "%installPath%\%processName%.xml",,Hide UseErrorLevel
+    Run, SCHTASKS /Create /TN "%processName%" /XML "%installPath%\%processName%.xml",,Hide UseErrorLevel
     Sleep,1000
     FileDelete,%installPath%\%processName%.xml
     FileCreateShortcut,%installPath%\%processName%.exe,%A_DesktopCommon%\%processName%.lnk,%installPath%,,%processName% 3.16,%installPath%\%processName%.ico
