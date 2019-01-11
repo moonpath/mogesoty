@@ -1,4 +1,4 @@
-;=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+﻿;=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ;=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ;                                                                      =
 ;Created on Oct 28, 2016                                               =
@@ -63,13 +63,13 @@ class Main
             ExitApp
         }
 
-        while(WinExist(this.ASSEMBLYTITLE))
+        while(WinExist(this.ASSEMBLYTITLE . " ahk_class AutoHotkey"))
         {
             SendMessage,0x02,0,0,,% this.ASSEMBLYTITLE
             Sleep,1000
             if(A_Index>3)
             {
-                WinGet, ScriptsList, List, % "ahk_exe" . this.ASSEMBLYTITLE . ".exe"
+                WinGet, ScriptsList, List,% this.ASSEMBLYTITLE . " ahk_class AutoHotkey"
                 Loop,%ScriptsList%
                 {
                     currentID:=ScriptsList%A_Index%
@@ -824,7 +824,7 @@ class TrayMenu
 
     Help()
     {
-        Run,% A_workingdir . "\Doc\AutoHotkey.chm",% A_workingdir,UserErrorLevel
+        Run,% A_workingdir . "\AutoHotkey.chm",% A_workingdir,UserErrorLevel
         return
     }
 

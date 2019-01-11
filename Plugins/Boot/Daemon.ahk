@@ -1,3 +1,5 @@
+#NoTrayIcon
+
 cron_status := StdOutStream("wsl service cron status")
 ssh_status := StdOutStream("wsl service ssh status")
 

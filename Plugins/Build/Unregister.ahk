@@ -13,7 +13,14 @@ if(!A_IsAdmin)
     return
 }
 
-SplitPath, A_AhkPath, , , , processName
+RegRead, REG_SZ, HKEY_CLASSES_ROOT\ahkfile\DefaultIcon
+REG_SZ := Trim(REG_SZ, """")
+SplitPath, REG_SZ, , , , processName
+if (processName = "")
+{
+    MsgBox, 64, Uninstall, Uninstall Failed!
+    ExitApp
+}
 
 RegDelete, HKEY_CLASSES_ROOT\.ahk
 RegDelete, HKEY_CLASSES_ROOT\ahkfile

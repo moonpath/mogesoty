@@ -20,17 +20,19 @@ Main()
     IniRead,PowerManager,Config.ini,Monitor,PowerManager,0
     IniRead,ReminderDetector,Config.ini,Monitor,ReminderDetector,0
     IniRead,InfoDetector,Config.ini,Monitor,InfoDetector,0
-    if(WindowDetector="1")
+    if(WindowDetector = "1")
         new Windows()
+
+    if(NetworkDetector = "1")
         new Network()
 
-    if(PowerManager="1")
+    if(PowerManager = "1")
         new Power()
 
-    if(ReminderDetector="1")
+    if(ReminderDetector = "1")
         new ReminderCheck()
 
-    if(InfoDetector == "1")
+    if(InfoDetector = "1")
         new Info()
 }
 
