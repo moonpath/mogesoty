@@ -41,7 +41,8 @@ class Main
 {
     __new(ByRef argc:="", ByRef argv*)
     {
-        Menu,Tray,Icon,Shell32.dll,174
+        ;Menu,Tray,Icon,Shell32.dll,174
+        Menu,Tray,Icon,% A_ScriptDir . "\" . this.ASSEMBLYTITLE . ".ico"
         Menu,Tray,Tip,% this.ASSEMBLYTITLE
         
         this.config := {}
