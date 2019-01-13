@@ -502,7 +502,7 @@ Hotkey_ShiftWheelDown()
 Capslock & T::
 Hotkey_t()
 {
-    Run, %comspec% /c "title BusyBox & cd /d "`%USERPROFILE`%" & "%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
+    Run, powershell.exe /c "cd $ENV:USERPROFILE;"%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
 }
 
 Capslock & u::

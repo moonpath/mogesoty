@@ -58,8 +58,7 @@ MouseGesture_L()
 
 MouseGesture_LR()
 {
-    Run,% comspec,% A_Desktop,UseErrorLevel
-    return
+    Run, powershell.exe /c "cd $ENV:USERPROFILE;"%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
 }
 
 MouseGesture_LU(hoveredHwnd)
