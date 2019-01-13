@@ -378,26 +378,32 @@ Hotkey_capslock_l()
         SendInput, {Right}
 }
 
-Capslock & =::
+Capslock & Up::
 Hotkey_sound_up()
 {
-    if(GetKeyState("Shift", "P"))
-        SendInput,{Media_Next}
-    else
-        SoundSet +2
+    SoundSet +2
 }
 
-Capslock & -::
+Capslock & Down::
 Hotkey_sound_down()
 {
-    if(GetKeyState("Shift", "P"))
-        SendInput,{Media_Prev}
-    else
-        SoundSet -2
+    SoundSet -2
 }
 
-Capslock & BackSpace::
-Hotkey_media_play_pause()
+Capslock & Left::
+Hotkey_media_left()
+{
+    SendInput,{Media_Prev}
+}
+
+Capslock & Right::
+Hotkey_media_right()
+{
+    SendInput,{Media_Next}
+}
+
+Capslock & Tab::
+Hotkey_media_pause()
 {
     SendInput,{Media_Play_Pause}
 }
@@ -688,6 +694,12 @@ F1 & n::
 hotkey_mouse_wheeldown()
 {
     Click WheelDown
+}
+
+F1 & F4::
+hotkey_mouse_middle()
+{
+    Click Middle
 }
 
 F1 & i::
