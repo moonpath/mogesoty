@@ -65,7 +65,7 @@ MouseGesture_LR()
 MouseGesture_LU(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
-    SendInput,^c
+    SendInput, ^{Insert}
     Main.Notification.Notify("Copy Completed")
     return
 }
@@ -80,7 +80,7 @@ MouseGesture_LUL(hoveredHwnd)
 MouseGesture_LUR(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
-    SendInput,^v
+    SendInput, +{Insert}
     Main.Notification.Notify("Paste Completed")
     return
 }
@@ -89,7 +89,7 @@ MouseGesture_LD(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
     ClipBoard:=""
-    SendInput,^c
+    SendInput, ^{Insert}
     ClipWait,0
     if(FileExist(ClipBoard))
     {
@@ -113,21 +113,24 @@ MouseGesture_R(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
     WinGet, currentProcessName, ProcessName, %hoveredHwnd%
-    ClipBoard:=""
-    SendInput,^c
-    ClipWait,0
-    if(clipboard!="")
-        if(Gesture.SearchEngine == 1)
-            Run,% "www.bing.com/search?&q=" . ReplaceURL(clipboard),,UseErrorLevel
-        else if(Gesture.SearchEngine==2)
-            Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(clipboard),,UseErrorLevel
-        else
-            Run,% "www.google.com/search?q=" . ReplaceURL(clipboard),,UseErrorLevel
-    else if(currentProcessName~="chrome.exe|360chrome.exe")
+    clip_saved := ClipBoardAll
+    ClipBoard := ""
+    SendInput, ^{Insert}
+    ClipWait, 0
+    to_search := clipboard
+    clipboard := clip_saved
+    if(to_search == "" && currentProcessName~="chrome.exe|360chrome.exe")
+    {
         SendInput,^t
+        return
+    }
+
+    if(Gesture.SearchEngine == 1)
+        Run,% "www.bing.com/search?&q=" . ReplaceURL(to_search),,UseErrorLevel
+    else if(Gesture.SearchEngine == 2)
+        Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(to_search),,UseErrorLevel
     else
-        Run,http:,,UseErrorLevel
-    return
+        Run,% "www.google.com/search?q=" . ReplaceURL(to_search),,UseErrorLevel
 }
 
 MouseGesture_RL(hoveredHwnd)
@@ -243,7 +246,7 @@ MouseGesture_D(hoveredHwnd)
 MouseGesture_DL(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
-    SendInput,^c
+    SendInput, ^{Insert}
     RegRead, OneNote, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OneNote.exe
     Run,% OneNote . " /sidenote /paste",,UseErrorLevel
     return
@@ -258,10 +261,10 @@ MouseGesture_DLU()
 MouseGesture_DR(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
-    SendInput,^c
+    SendInput, ^{Insert}
     Run NotePad,,UseErrorLevel
     Sleep, 300
-    SendInput,^v
+    SendInput, +{Insert}
     return
 }
 

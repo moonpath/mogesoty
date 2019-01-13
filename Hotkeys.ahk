@@ -1,4 +1,4 @@
-goto,HotkeysEnd ;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+﻿goto,HotkeysEnd ;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ;<Hotkey>===============================================================
 #!F1::
 Hotkey_Alt_Win_F1()
@@ -149,7 +149,7 @@ Capslock & b::
 Hotkey_b()
 {
     ClipBoard:=""
-    SendInput,^c
+    SendInput, ^{Insert}
     ClipWait,0
     if(FileExist(ClipBoard))
     {
@@ -172,7 +172,7 @@ Hotkey_c()
     {
         ClipSaved := ClipBoardAll
         ClipBoard:=""
-        Send ^c
+        SendInput, ^{Insert}
         ClipWait,0
         clipboard=%clipboard%
         if(!FileExist(clipboard))
@@ -238,11 +238,11 @@ Hotkey_StringUpper()
 {
     ClipSaved:=ClipBoardAll
     ClipBoard:=""
-    SendInput,^c
+    SendInput, ^{Insert}
     ClipWait,0
     StringUpper,capital,ClipBoard
     ClipBoard:=capital
-    SendInput,^v
+    SendInput, +{Insert}
     Sleep,200
     ClipBoard:=ClipSaved
     return
@@ -253,11 +253,11 @@ Hotkey_StringLower()
 {
     ClipSaved:=ClipBoardAll
     ClipBoard:=""
-    SendInput,^c
+    SendInput, ^{Insert}
     ClipWait,0
     StringLower,lowercase,ClipBoard
     ClipBoard:=lowercase
-    SendInput,^v
+    SendInput, +{Insert}
     Sleep,200
     ClipBoard:=ClipSaved
     return
@@ -269,11 +269,11 @@ Hotkey_StringTitle()
 {
     ClipSaved:=ClipBoardAll
     ClipBoard:=""
-    SendInput,^c
+    SendInput, ^{Insert}
     ClipWait,0
     StringUpper,title,ClipBoard,T
     ClipBoard:=title
-    SendInput,^v
+    SendInput, +{Insert}
     Sleep,200
     ClipBoard:=ClipSaved
     return
@@ -378,6 +378,23 @@ Hotkey_capslock_l()
         SendInput, {Right}
 }
 
+Capslock & n::
+Hotkey_notepad()
+{
+    SendInput, ^{Insert}
+    if(GetKeyState("Shift", "P"))
+    {
+        RegRead, OneNote, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OneNote.exe
+        Run,% OneNote . " /sidenote /paste",,UseErrorLevel
+    }
+    else
+    {
+        Run NotePad,,UseErrorLevel
+        Sleep, 300
+        SendInput, +{Insert}
+    }
+}
+
 Capslock & Up::
 Hotkey_sound_up()
 {
@@ -449,16 +466,21 @@ Hotkey_r()
 Capslock & s::
 Hotkey_s()
 {
-    ClipBoard:=""
-    Send ^c
-    ClipWait,0
+    clip_saved := ClipboardAll
+    clip_text_saved := Clipboard
+    Clipboard := ""
+    SendInput, ^{Insert}
+    ClipWait, 0
+    to_search := Clipboard
+    Clipboard := clip_saved
+    if(to_search == "" && clip_text_saved != "")
+        to_search := clip_text_saved
     if(Gesture.SearchEngine == 1)
-        Run,% "www.bing.com/search?&q=" . ReplaceURL(clipboard),,UseErrorLevel
-    else if(Gesture.SearchEngine==2)
-        Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(clipboard),,UseErrorLevel
+        Run,% "www.bing.com/search?&q=" . ReplaceURL(to_search),,UseErrorLevel
+    else if(Gesture.SearchEngine == 2)
+        Run,% "www.baidu.com/s?ie=utf-8&wd=" . ReplaceURL(to_search),,UseErrorLevel
     else
-        Run,% "www.google.com/search?q=" . ReplaceURL(clipboard),,UseErrorLevel
-    return
+        Run,% "www.google.com/search?q=" . ReplaceURL(to_search),,UseErrorLevel
 }
 
 CapsLock & WheelUp::
@@ -482,7 +504,6 @@ Hotkey_t()
 {
     Run, %comspec% /c "title BusyBox & cd /d "`%USERPROFILE`%" & "%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
 }
-
 
 Capslock & u::
 Hotkey_u()
