@@ -633,76 +633,28 @@ F1 & h::
 F1 & Left::
 hotkey_mouse_left()
 {
-    times := 0
-    while(True)
-    {
-        keys_status := StrSplit(A_ThisHotkey, "&", " ")
-        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
-            break
-        if (times < 15)
-            times++
-        move_step := times >= 15 ? 50 : exp(sqrt(times))
-        sleep_time := times >= 15 ? 20 : 50 - 2*times
-        MouseMove,% -move_step, 0, 0, R
-        Sleep,% sleep_time
-    }
+    hotkey_mouse("L")
 }
 
 F1 & l::
 F1 & Right::
 hotkey_mouse_right()
 {
-    times := 0
-    while(True)
-    {
-        keys_status := StrSplit(A_ThisHotkey, "&", " ")
-        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
-            break
-        if (times < 15)
-            times++
-        move_step := times >= 15 ? 50 : exp(sqrt(times))
-        sleep_time := times >= 15 ? 20 : 50 - 2*times
-        MouseMove,% move_step, 0, 0, R
-        Sleep,% sleep_time
-    }
+    hotkey_mouse("R")
 }
 
 F1 & j::
 F1 & Down::
 hotkey_mouse_down()
 {
-    times := 0
-    while(True)
-    {
-        keys_status := StrSplit(A_ThisHotkey, "&", " ")
-        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
-            break
-        if (times < 15)
-            times++
-        move_step := times >= 15 ? 50 : exp(sqrt(times))
-        sleep_time := times >= 15 ? 20 : 50 - 2*times
-        MouseMove,0, % move_step, 0, R
-        Sleep,% sleep_time
-    }
+    hotkey_mouse("D")
 }
 
 F1 & k::
 F1 & Up::
 hotkey_mouse_up()
 {
-    times := 0
-    while(True)
-    {
-        keys_status := StrSplit(A_ThisHotkey, "&", " ")
-        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
-            break
-        if (times < 15)
-            times++
-        move_step := times >= 15 ? 50 : exp(sqrt(times))
-        sleep_time := times >= 15 ? 20 : 50 - 2*times
-        MouseMove,0, % -move_step, 0, R
-        Sleep,% sleep_time
-    }
+    hotkey_mouse("U")
 }
 
 F1 & p::

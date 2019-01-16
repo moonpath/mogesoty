@@ -1,4 +1,4 @@
-;<Initialization>=======================================================
+﻿;<Initialization>=======================================================
 ;FileAttribMenu:=new FileAttribMenu()
 ;WindowStyle:=new WindowStyle()
 ContextMenu:=new ContextMenu()
@@ -119,6 +119,47 @@ ShutDown()
 ReplaceURL(command)
 {
     return SubStr(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(SubStr(command,1,64),"""",""""""""),"`%","`%25")," ","`%20"),"`n","`%20"),"#","`%23"),"&","`%26"),"+","`%2B"),"=","`%3D"),1,128)
+}
+
+hotkey_mouse(direction)
+{
+    if(direction = "L")
+    {
+        horizontal := -1
+        vertical := 0
+    }
+    else if(direction = "R")
+    {
+        horizontal := 1
+        vertical := 0
+    }
+    else if(direction = "U")
+    {
+        horizontal := 0
+        vertical := -1
+    }
+    else if(direction = "D")
+    {
+        horizontal := 0
+        vertical := 1
+    }
+    else
+    {
+        horizontal := 0
+        vertical := 0
+    }
+    times := 0
+    while(True)
+    {
+        keys_status := StrSplit(A_ThisHotkey, "&", " ")
+        if (!GetKeyState(keys_status[1], "P") || !GetKeyState(keys_status[2], "P"))
+            break
+        if (times < 30)
+            times++
+        move_step := 30 / (1 + exp(-times / 2 + 5))
+        MouseMove,% horizontal * move_step,% vertical * move_step, 0, R
+        Sleep, 20
+    }
 }
 ;</Functions>===========================================================
 
