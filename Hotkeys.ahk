@@ -1,5 +1,34 @@
 ﻿goto,HotkeysEnd ;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ;<Hotkey>===============================================================
+Capslock & Space::
+Hotkey_()
+{
+    if(GetKeyState("Shift", "P"))
+    {
+        SendInput, ^{Space}
+    }
+    else if(GetKeyState("Ctrl", "P"))
+    {
+        RegRead, status, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin
+        if (status = 0)
+            RegWrite, REG_DWORD, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin, 1
+        else if (status = 1)
+            RegWrite, REG_DWORD, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin, 0
+    }
+    else if(GetKeyState("Alt", "P"))
+    {
+        SendInput, {Media_Play_Pause}
+    }
+    else
+    {
+        KeyState := GetKeyState("CapsLock", "T")
+        if (KeyState)
+            SetCapsLockState, ALWAYSOFF
+        else
+            SetCapsLockState, ALWAYSON
+    }
+}
+
 #!F1::
 Hotkey_Alt_Win_F1()
 {
@@ -417,12 +446,6 @@ Capslock & Right::
 Hotkey_media_right()
 {
     SendInput,{Media_Next}
-}
-
-Capslock & Tab::
-Hotkey_media_pause()
-{
-    SendInput,{Media_Play_Pause}
 }
 
 Capslock & o::

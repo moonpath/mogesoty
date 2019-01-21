@@ -294,12 +294,9 @@ class Hotkey
     __new(keyList*)
     {
         SetCapsLockState,ALWAYSOFF
-        BoundMask := this.Mask.bind(this)
-        BoundUnMask := this.UnMask.bind(this)
+        BoundMask := this.__new.bind(this)
         BoundKeyRecognition:= this.KeyRecognition.bind(this)
         BoundKeyCompensation := this.KeyCompensation.bind(this)
-        ;Hotkey, !Capslock,% BoundUnMask
-        Hotkey, Capslock & Space,% BoundUnMask
         for i,v in keyList
         {
             Hotkey, %v%,% BoundMask
@@ -307,21 +304,6 @@ class Hotkey
             Hotkey, $*%v%,% BoundKeyCompensation
         }
         return this
-    }
-
-    Mask()
-    {
-        return
-    }
-    
-    UnMask()
-    {
-        KeyState := GetKeyState("CapsLock", "T")
-        if (KeyState)
-            SetCapsLockState, ALWAYSOFF
-        else
-            SetCapsLockState, ALWAYSON
-        return
     }
 
     KeyRecognition()
