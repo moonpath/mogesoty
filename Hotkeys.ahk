@@ -80,25 +80,31 @@ Capslock & `::
 Hotkey_start()
 {
     input, key, L1, {Enter}
-    if(key == "0")
+    if(key = "1")
+        Component.RunPlugin("KeyRecord\KeyRecord.ahk")
+    else if(key = "2")
+        Component.RunPlugin("Draw\Draw.ahk")
+    else if(key = "3")
+        Component.RunPlugin("Keypass\Keypass.ahk")
+    else if(key = "4")
+        Component.RunPlugin("HotStrings\HotStrings.ahk")
+    else if(key = "5")
+        Component.RunPlugin("WindowInfo\WindowInfo.ahk")
+    else if(key = "6")
+        Component.RunPlugin("Navigation\Navigation.ahk")
+    else if(key = "s")
+        Run, cmd.exe /c "shutdown /s /hybrid /t 0", , Hide UseErrorLevel
+    else if(key = "r")
+        Run, cmd.exe /c "shutdown /r /t 0", , Hide UseErrorLevel
+    else if(key = "q")
+        DllCall("PowrProf\SetSuspendState", "int", 0, "int", 0, "int", 0)
+    else if(key = "m")
     {
         BlockInput,On
         SendMessage, 0x112, 0xF170, 2,, Program Manager
         Sleep,2000
         BlockInput,Off
     }
-    else if(key == "1")
-        Component.RunPlugin("KeyRecord\KeyRecord.ahk")
-    else if(key == "2")
-        Component.RunPlugin("Draw\Draw.ahk")
-    else if(key == "3")
-        Component.RunPlugin("Keypass\Keypass.ahk")
-    else if(key == "4")
-        Component.RunPlugin("HotStrings\HotStrings.ahk")
-    else if(key == "5")
-        Component.RunPlugin("WindowInfo\WindowInfo.ahk")
-    else if(key == "6")
-        Component.RunPlugin("Navigation\Navigation.ahk")
     else
         SendInput,% key
 }
