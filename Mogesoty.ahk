@@ -98,16 +98,16 @@ class Main
 
     Load()
     {
-        OnMessage(0x4A,this.ReceiveMessage.bind(this),5)
+        OnMessage(0x4A, this.ReceiveMessage.bind(this),5)
         OnExit(this.Recovery.bind(this),1)
 
-        Component:=new Component(this.config["Boot"]["bootDir"])
-        Gesture:=new Gesture(this.config["Trail"]["trailEnabled"],this.config["Trail"]["trailColor"],this.config["Trail"]["trailWidth"],"Lbutton","Capslock")
-        Hotkey:=new Hotkey(this.KeyList*)
+        Component := new Component(this.config["Boot"]["bootPath"])
+        Gesture := new Gesture(this.config["Config"]["Mouse"], this.config["Trail"]["trailEnabled"], this.config["Trail"]["trailColor"], this.config["Trail"]["trailWidth"])
+        Hotkey := new Hotkey(this.config["Config"]["Keyboard"], this.KeyList*)
         this.Notification := new this.Notification()
-        Gosub,Lib
+        Gosub, Lib
 
-        TrayMenu:=new TrayMenu()
+        TrayMenu := new TrayMenu()
 
         this.ShowLogo()
 
@@ -291,29 +291,39 @@ class Main
 
 class Hotkey
 {
-    __new(keyList*)
+    __new(ModifierKey, keyList*)
     {
-        SetCapsLockState,ALWAYSOFF
+        ModifierKey := ModifierKey != "" ? ModifierKey : "Capslock"
+        this.ModifierKey := ModifierKey
         BoundMask := this.__new.bind(this)
         BoundKeyRecognition:= this.KeyRecognition.bind(this)
         BoundKeyCompensation := this.KeyCompensation.bind(this)
+        BoundKeyActivation := this.KeyActivation.bind(this)
+
+        Hotkey,% ModifierKey,% BoundMask
+        if (!IsFunc("Hotkey_"))
+            Hotkey, %ModifierKey% & Space,% BoundKeyCompensation
+
         for i,v in keyList
         {
             Hotkey, %v%,% BoundMask
-            Hotkey, Capslock & %v%,% BoundKeyRecognition
-            Hotkey, $*%v%,% BoundKeyCompensation
+            Hotkey, %ModifierKey% & %v%,% BoundKeyRecognition
+            Hotkey, $*%v%,% BoundKeyActivation
         }
         return this
     }
 
     KeyRecognition()
     {
-        key := StrSplit(A_ThisHotkey, " ")[3]
-        SendInput, {%key%}
-        return
+        SendInput,% "{" . StrSplit(A_ThisHotkey, " ")[3] . "}"
     }
 
     KeyCompensation()
+    {
+        SendInput,% "{" . this.ModifierKey . "}"
+    }
+
+    KeyActivation()
     {
         ctrl_state := GetKeyState("ctrl", "P")
         alt_state := GetKeyState("alt", "P")
@@ -330,21 +340,32 @@ class Hotkey
             key_list .= "#"
         key_list .= "{" . SubStr(A_ThisHotKey,3) . "}"
         SendInput,% key_list
-        return
     }
 }
 
 class Gesture
 {
-    __new(trailEnabled:=false,trailColor:=0x800080,trailWidth:=4,additionalKey*)
+    __new(ModifierKey:="Rbutton", trailEnabled:=false, trailColor:=0x800080, trailWidth:=4)
     {
-        this.trailEnabled:=trailEnabled
-        trailEnabled?this.trail:=new this.Draw(trailColor,trailWidth):false
-        this.additionalKey:=additionalKey
-        this.BoundRecognition:=this.Recognition.bind(this)
-        MouseGesture:=this.Start.bind(this)
-        Hotkey,Rbutton,%MouseGesture%
+        ModifierKey := ModifierKey != "" ? ModifierKey : "Rbutton"
+        trailEnabled := trailEnabled != "" ? trailEnabled : false
+        trailColor := trailColor != "" ? trailColor : 0x800080
+        trailWidth := trailWidth != "" ? trailWidth : 4
+        this.ModifierKey := ModifierKey
+        this.trailEnabled := trailEnabled
+        trailEnabled ? this.trail := new this.Draw(ModifierKey, trailColor, trailWidth) : false
+        this.BoundRecognition := this.Recognition.bind(this)
+        MouseGesture := this.Start.bind(this)
+        Hotkey,% ModifierKey,% MouseGesture
         return this
+    }
+
+    Toggle(cmd)
+    {
+        if (cmd)
+            Hotkey,% this.ModifierKey, On
+        else
+            Hotkey,% this.ModifierKey, Off
     }
 
     Start()
@@ -357,24 +378,30 @@ class Gesture
         CoordMode,Mouse,% prevCoordModeMouse
         this.gestureParams:=["ahk_id" . hoveredHwnd,classNN,xpos1,ypos1]
         this.xpos1:=xpos1,this.ypos1:=ypos1
-        SetTimer,% BoundRecognition,1
-        if(this.trailEnabled)
-            this.trail.StartTrail()
-        return
+        if (!A_IsPaused)
+        {
+            SetTimer,% BoundRecognition,1
+            if(this.trailEnabled)
+                this.trail.StartTrail()
+        }
+        else if(IsFunc("MouseGesture_"))
+        {
+            ;KeyWait,% this.ModifierKey
+            MouseGesture_(this.gestureParams*)
+        }
+        else
+        {
+            ;KeyWait,% this.ModifierKey
+            SendInput,% "{" . this.ModifierKey . "}"
+        }
     }
 
     Recognition()
     {
         ListLines,Off
         BoundRecognition:=this.BoundRecognition
-        if(!GetKeyState("Rbutton","P"))
+        if(!GetKeyState(this.ModifierKey, "P"))
         {
-            for index,key in this.additionalKey
-                if(GetKeyState(key,"P"))
-                {
-                    this.track:=this.track . index
-                    break
-                }
             track:=this.track
             SetTimer,% BoundRecognition,Delete
             if(this.trailEnabled)
@@ -383,7 +410,7 @@ class Gesture
                 Sleep,0
             }
             if(!track&&!IsFunc("MouseGesture_"))
-                SendInput,{Rbutton}
+                SendInput,% "{" . this.ModifierKey . "}"
             else
                 MouseGesture_%track%(this.gestureParams*)
         }
@@ -402,11 +429,12 @@ class Gesture
 
     class Draw
     {
-        __New(trailColor:=0x800080,trailWidth:=4)
+        __New(ModifierKey:="Rbutton", trailColor:=0x800080, trailWidth:=4)
         {
             static index:=0
             Gui,% (this.index := index := Mod(index++, 8) + 1) . ":New", +HwndtrailHwnd -Caption -MinimizeBox -SysMenu +Owner +ToolWindow +Disabled +AlwaysOnTop +LastFound, Palette
             Gui,% this.index . ":Color", 008080
+            this.ModifierKey := ModifierKey
             this.trailHwnd := trailHwnd
             BoundDrawLine := this.DrawLine.bind(this)
             this.BoundDrawLine := BoundDrawLine
@@ -462,7 +490,7 @@ class Gesture
         {
             ListLines, Off
             Critical
-            if(!GetKeyState("Rbutton","P"))
+            if(!GetKeyState(this.ModifierKey, "P"))
                 this.StopTrail()
             else
             {
@@ -505,8 +533,9 @@ class Gesture
 
 class Component
 {
-    __new(bootDir:="Boot")
+    __new(bootPath:="Boot")
     {
+        bootPath := bootPath != "" ? bootPath : "Boot"
         this.processList:={}
         this.pluginsDir:=A_workingdir . "\Plugins"
         this.BoundRunPlugin:=this.RunPlugin.bind(this)
@@ -514,7 +543,7 @@ class Component
         Menu,Boot,Disable,Running Processes:
         Menu,Tray,Add,Boot,:Boot
         this.AddComponentsToMenu(this.pluginsDir)
-        Loop, Parse, bootDir, CSV
+        Loop, Parse, bootPath, CSV
         if(FileExist(this.pluginsDir . "\" . A_LoopField)="D")
             Loop,% this.pluginsDir . "\" . A_LoopField . "\*", 0, 0
                 this.RunPlugin(A_LoopFileLongPath)
@@ -664,7 +693,7 @@ class TrayMenu
         WindowSpy:=this.WindowSpy.bind(this)
         Edit:=this.Edit.bind(this)
         Reload:=this.Reload.bind(this)
-        Pause:=this.Pause.bind(this)
+        ;Pause:=this.Pause.bind(this)
         Suspend:=this.Suspend.bind(this)
         Help:=this.Help.bind(this)
         ReadMe:=this.ReadMe.bind(this)
@@ -685,7 +714,7 @@ class TrayMenu
         Menu, Tray, Add
         Menu, Tray, Add, Edit, % Edit
         Menu, Tray, Add, Reload, % Reload
-        Menu, Tray, Add, Pause, % Pause
+        ;Menu, Tray, Add, Pause, % Pause
         Menu, Tray, Add, Suspend, % Suspend
         Menu, Tray, Add
         Menu, Tray, Add, Help, % Help
@@ -704,14 +733,12 @@ class TrayMenu
         {
             if(!A_IsPaused)
             {
-                Menu,Tray,Check,Pause
-                Hotkey,Rbutton,Off,UseErrorLevel
+                ;Menu,Tray,Check,Pause
                 TrayTip, ,The Program Has Been Paused,,1
             }
             else
             {
-                Menu,Tray,UnCheck,Pause
-                Hotkey,Rbutton,On,UseErrorLevel
+                ;Menu,Tray,UnCheck,Pause
                 TrayTip, ,The Program Has Been Unpaused,,1
             }
         }
@@ -783,20 +810,7 @@ class TrayMenu
 
     Pause()
     {
-        Pause,Toggle,1
-        if(A_IsPaused)
-        {
-            Menu,Tray,Check,Pause
-            Hotkey, Rbutton, Off, UseErrorLevel
-            TrayTip, ,The Program Has Been Paused,,1
-        }
-        else
-        {
-            Menu,Tray,UnCheck,Pause
-            Hotkey, Rbutton, On, UseErrorLevel
-            TrayTip, ,The Program Has Been Unpaused,,1
-        }
-        return
+        PostMessage, 0x111, 65403,,,% "ahk_id" . A_ScriptHwnd
     }
 
     WindowSpy()

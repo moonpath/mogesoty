@@ -21,6 +21,7 @@ Hotkey_()
     }
     else
     {
+        KeyWait, CapsLock
         KeyState := GetKeyState("CapsLock", "T")
         if (KeyState)
             SetCapsLockState, ALWAYSOFF
@@ -43,72 +44,36 @@ Hotkey_Alt_Win_F1()
         Menu,Tray,UnCheck,Suspend
         TrayTip,,The Program Has Been Enabled,,1
     }
-    return
 }
 
 #!F2::
-Hotkey_Alt_Win_F2()
+Hotkey_Alt_Win_F2(cmd:="")
 {
-    TrayMenu.Pause()
-    return
+    static status := true
+    if(cmd = "")
+        status := !status
+        ;status?status:=false:status:=true
+    else if(cmd = "On")
+        status := true
+    else
+        status := false
+    if(status)
+        TrayTip,, Mouse Gestures Have Been Enabled,,1
+    else
+        TrayTip,, Mouse Gestures Have Been Suspended,,1
+    Gesture.Toggle(status)
 }
 
 #!F3::
 Hotkey_Alt_Win_F3()
 {
     TrayMenu.Reload()
-    return
 }
 
 #!F4::
 Hotkey_Alt_Win_F4()
 {
     TrayMenu.Exit()
-    return
-}
-
-#!F5::
-Hotkey_Alt_Win_F5(command:="")
-{
-    static status:=true
-    if(!command)
-    {
-        Hotkey, Rbutton, Toggle, UseErrorLevel
-        status?status:=false:status:=true
-    }
-    else if(command="On")
-    {
-        Hotkey, Rbutton, On, UseErrorLevel
-        status:=true
-    }
-    else
-    {
-        Hotkey, Rbutton, Off, UseErrorLevel
-        status:=false
-    }
-    if(status)
-        TrayTip,,Mouse Gestures Have Been Enabled,,1
-    else
-        TrayTip,,Mouse Gestures Have Been Suspended,,1
-    return
-}
-
-#!F6::
-Hotkey_Alt_Win_F6()
-{
-    if(Gesture.trailEnabled)
-    {
-        Gesture.trailEnabled:=false
-        Gesture.trail.StopTrail()
-        Gesture.trail.Hide()
-        TrayTip,,Trail unenabled,,1
-    }
-    else
-    {
-        Gesture.trailEnabled:=true
-        TrayTip,,Trail enabled,,1
-    }
-    return
 }
 
 Capslock & `::

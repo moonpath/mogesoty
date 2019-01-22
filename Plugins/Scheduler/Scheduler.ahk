@@ -261,14 +261,14 @@ class Windows
 
         if(exist && WinExist("TeamViewer Panel"))
         {
-            SendMessage("Hotkey_Alt_Win_F5" . "," . "Off", ASSEMBLYTITLE . "ahk_class AutoHotkey")
+            SendMessage("Hotkey_Alt_Win_F2" . "," . "Off", ASSEMBLYTITLE . "ahk_class AutoHotkey")
             exist:=0
         }
 
         if(!exist && !WinExist("TeamViewer Panel"))
         {
             Sleep,1000
-            SendMessage("Hotkey_Alt_Win_F5" . "," . "On", ASSEMBLYTITLE . "ahk_class AutoHotkey")
+            SendMessage("Hotkey_Alt_Win_F2" . "," . "On", ASSEMBLYTITLE . "ahk_class AutoHotkey")
             exist:=1
         }
         return

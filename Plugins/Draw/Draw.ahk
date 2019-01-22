@@ -28,7 +28,7 @@ return
 trail.StopEraseTrail()
 return
 
-#F4::ExitApp
+~#F4::ExitApp
 
 class Draw
 {
@@ -105,7 +105,6 @@ class Draw
         MouseGetPos, cur_x, cur_y
         if((this.pre_x-cur_x)**2+(this.pre_y-cur_y)**2 <= 1**2)
             return
-        tooltip,% cur_x
         hDC := DllCall("GetDC", UInt, this.trailHWnd)
         hCurrPen := DllCall("CreatePen", UInt, 0, UInt, this.trailWidth, UInt, this.trailcolor)
         DllCall("SelectObject", UInt,hdc, UInt,hCurrPen)
