@@ -7,49 +7,6 @@ MouseGesture_(hoveredHwnd,ClassNN)
     return
 }
 
-MouseGesture_1(hoveredHwnd,ClassNN,xPos,yPos)
-{
-    /*
-    WinGetPos,,winY,,,% hoveredHwnd
-    WinGetClass,ProcessClass,% hoveredHwnd
-    if(yPos-winY<30&&ProcessClass~="CabinetWClass")
-        WindowStyle.Show(SubStr(hoveredHwnd,7))
-    else if((ProcessClass~="CabinetWClass|Progman|WorkerW")&&(SelectedFile:=WindowsExplorer.WindowsExplorerGetSelectedItemPath(SubStr(hoveredHwnd,7)))&&(StrLen(SelectedFile)-InStr(SelectedFile,":")-1))
-        FileAttribMenu.Show(SelectedFile)
-    else if(yPos-winY<30&&!(ProcessClass~="Windows.UI.Core.CoreWindow|Progman|Shell_TrayWnd|Shell_SecondaryTrayWnd|MultitaskingViewFrame|NotifyIconOverflowWindow|WorkerW|TaskListThumbnailWnd"))
-        WindowStyle.Show(SubStr(hoveredHwnd,7))
-    else
-        ContextMenu.Show()
-     */
-    return
-}
-
-MouseGesture_2(hoveredHwnd,ClassNN,xPos,yPos)
-{
-    MouseGesture_1(hoveredHwnd,ClassNN,xPos,yPos)
-    return
-}
-
-MouseGesture_L1()
-{
-    SendInput,{Lbutton Up}
-    Hotkey,WheelDown,Hotkey_sound_down,On
-    Hotkey,WheelUp,Hotkey_sound_up,On
-    KeyWait,Lbutton,T10
-    Hotkey,WheelDown,Hotkey_sound_down,Off
-    Hotkey,WheelUp,Hotkey_sound_up,Off
-}
-
-MouseGesture_L2()
-{
-    SendInput,{Lbutton Up}
-    Hotkey,WheelDown,Hotkey_sound_down,On
-    Hotkey,WheelUp,Hotkey_sound_up,On
-    KeyWait,``,T10
-    Hotkey,WheelDown,Hotkey_sound_down,Off
-    Hotkey,WheelUp,Hotkey_sound_up,Off
-}
-
 MouseGesture_L()
 {
     Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d},,UseErrorLevel
@@ -76,36 +33,11 @@ MouseGesture_LUL(hoveredHwnd)
     return
 }
 
-MouseGesture_LUR(hoveredHwnd)
+MouseGesture_LD(hoveredHwnd)
 {
     WinActivate,% hoveredHwnd
     SendInput, +{Insert}
     Main.Notification.Notify("Paste Completed")
-    return
-}
-
-MouseGesture_LD(hoveredHwnd)
-{
-    WinActivate,% hoveredHwnd
-    ClipBoard:=""
-    SendInput, ^{Insert}
-    ClipWait,0
-    if(FileExist(ClipBoard))
-    {
-        SplitPath, ClipBoard, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-        if OutExtension in png,jpg,jpeg,bmp,gif
-        {
-            Run, Plugins\View\i_view64.exe %ClipBoard% /clipcopy /killmesoftly /silent,,UseErrorLevel
-            Main.Notification.Notify("Image Copied to Clipboard")
-        }
-    }
-    return
-}
-
-MouseGesture_LDR()
-{
-    Run, Plugins\View\i_view64.exe /clippaste /silent,,UseErrorLevel
-    return
 }
 
 MouseGesture_R(hoveredHwnd)

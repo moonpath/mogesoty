@@ -4,9 +4,7 @@ Capslock & Space::
 Hotkey_()
 {
     if(GetKeyState("Shift", "P"))
-    {
         SendInput, ^{Space}
-    }
     else if(GetKeyState("Ctrl", "P"))
     {
         RegRead, status, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin
@@ -14,10 +12,6 @@ Hotkey_()
             RegWrite, REG_DWORD, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin, 1
         else if (status = 1)
             RegWrite, REG_DWORD, HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS, Enable Double Pinyin, 0
-    }
-    else if(GetKeyState("Alt", "P"))
-    {
-        SendInput, {Media_Play_Pause}
     }
     else
     {
@@ -105,6 +99,8 @@ Hotkey_start()
         Sleep,2000
         BlockInput,Off
     }
+    else if(key = " ")
+        SendInput, {Media_Play_Pause}
     else
         SendInput,% key
 }
@@ -339,10 +335,10 @@ Hotkey_g(Count := 1)
 Capslock & h::
 Hotkey_capslock_h()
 {
-    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+    if(GetKeyState("Shift", "P"))
         SendInput, {Home}
     else
-        SendInput,{Left}
+        SendInput, {Left}
 }
 
 Capslock & i::
@@ -354,7 +350,7 @@ Hotkey_i()
 Capslock & j::
 Hotkey_capslock_j()
 {
-    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+    if(GetKeyState("Shift", "P"))
         SendInput, {PgDn}
     else
         SendInput, {Down}
@@ -363,7 +359,7 @@ Hotkey_capslock_j()
 Capslock & k::
 Hotkey_capslock_k()
 {
-    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+    if(GetKeyState("Shift", "P"))
         SendInput, {PgUp}
     else
         SendInput, {Up}
@@ -372,7 +368,7 @@ Hotkey_capslock_k()
 Capslock & l::
 Hotkey_capslock_l()
 {
-    if(GetKeyState("Shift", "P") || GetKeyState("Alt", "P"))
+    if(GetKeyState("Shift", "P"))
         SendInput, {End}
     else
         SendInput, {Right}
@@ -695,6 +691,12 @@ F1 & F3 Up::
 hotkey_mouse_rbutton_up()
 {
     Click Right Up
+}
+
+F1 & Esc::
+hotkey_mouse_caret()
+{
+    MouseMove, % A_CaretX, % A_CaretY
 }
 
 ~ESC::
