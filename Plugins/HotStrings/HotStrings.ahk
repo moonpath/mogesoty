@@ -1,4 +1,4 @@
-TrayTip,,Hot strings has started,,1
+﻿TrayTip,,Hot strings has started,,1
 OnExit("Recovery",1)
 Recovery()
 {
@@ -49,11 +49,14 @@ Recovery()
 :O:\cup::∪
 :O:\square::²
 :O:\nabla::∇
+:O:\times::×
+:O:\div::÷
 ;</Math>================================================================
 
 ;<Emoji>================================================================
 :O:\haha::😄
 :O:\xixi::😁
+:O:\tiaopi::😜
 :O:\xiaoku::😂
 :O:\guiyi::😏
 :O:\ganga::😅
@@ -66,6 +69,9 @@ Recovery()
 :O:\kun::😴
 :O:\qinqin::😘
 :O:\kan::👀
+:O:\baituo::🙏
+:O:\ok::👌
+:O:\pijiu::🍺
 ;</Emoji>===============================================================
 
 ;</Emoticon>============================================================

@@ -108,6 +108,7 @@ class Main
         Gosub, Lib
 
         TrayMenu := new TrayMenu()
+        Daemon := new Daemon()
 
         this.ShowLogo()
 
@@ -124,75 +125,6 @@ class Main
         Sleep,2000
         TrayTip, ,% this.ASSEMBLYTITLE . " Has Started",,1
         return
-    }
-    
-    class Notification
-    {
-        __new(Font:="Verdana", FontSize:=11, Width:=300, Color := "Black", Transparent:=220)
-        {
-            this.Font := Font
-            this.FontSize := FontSize
-            this.Width := Width
-            this.Color := Color
-            this.Transparent := Transparent
-            return this
-        }
-
-        Notify(text)
-        {
-            Font := this.Font
-            FontSize := this.FontSize
-            Width := this.Width
-            Color := this.Color
-            Transparent := this.Transparent
-            Gui,tip: Destroy
-            text := "`n" . text . "`n"
-            SysGet, WorkArea, MonitorWorkArea
-            Gui,tip: New, -Caption +AlwaysOnTop +HwndtipHwnd +ToolWindow +Border +LastFound
-            Gui,tip: Margin, , 0
-            Gui,tip: Color,% Color
-            Gui,tip: +LastFound
-            WinSet, Transparent, 0
-            Gui,tip: Font, s%FontSize% bold,% Font
-            Gui,tip: Add, Text, cWhite gGuiDestroy W%Width%,% text
-            GuiControlGet, TextSize, tip:Pos, Static1
-            Xpos := WorkAreaRight - Width - 18
-            Ypos := WorkAreaBottom - TextSizeH - 2 - 12
-            Gui,tip: Show, X%Xpos% Y%Ypos% W%Width% NA
-            SoundPlay, *-1
-            BoundFade := this.Fade.bind(this,tipHwnd,Transparent)
-            SetTimer,% BoundFade, -1
-            return
-            GuiDestroy:
-            Gui,tip: Destroy
-            return
-        }
-
-        Fade(Hwnd, Transparent)
-        {
-            diff := 0
-            while(diff < Transparent)
-            {
-                Gui,tip: +LastFound
-                WinSet, Transparent,% diff
-                diff += 3
-                Sleep, 10
-            }
-            Sleep, 3000
-            MouseGetPos, , , OutputVarWin
-            while(diff > 0)
-            {
-                MouseGetPos, , , HoveredWin
-                if(Hwnd == HoveredWin)
-                    diff := Transparent
-                Gui,tip: +LastFound
-                WinSet, Transparent,% diff
-                diff -= 3
-                Sleep, 10
-            }
-            Gui,tip: Destroy
-            return
-        }
     }
     
     LogToFile(ByRef event)
@@ -268,7 +200,7 @@ class Main
     Recovery()
     {
         this.LogToFile("Exit By " . A_ExitReason)
-;        ExitApp
+        ;ExitApp
     }
 
     ASSEMBLYTITLE[]
@@ -286,6 +218,109 @@ class Main
         {
             return "3.16.7116.0"
         }
+    }
+
+    class Notification
+    {
+        __new(Font:="Verdana", FontSize:=11, Width:=300, Color := "Black", Transparent:=220)
+        {
+            this.Font := Font
+            this.FontSize := FontSize
+            this.Width := Width
+            this.Color := Color
+            this.Transparent := Transparent
+            return this
+        }
+
+        Notify(text)
+        {
+            Font := this.Font
+            FontSize := this.FontSize
+            Width := this.Width
+            Color := this.Color
+            Transparent := this.Transparent
+            Gui,tip: Destroy
+            text := "`n" . text . "`n"
+            SysGet, WorkArea, MonitorWorkArea
+            Gui,tip: New, -Caption +AlwaysOnTop +HwndtipHwnd +ToolWindow +Border +LastFound
+            Gui,tip: Margin, , 0
+            Gui,tip: Color,% Color
+            Gui,tip: +LastFound
+            WinSet, Transparent, 0
+            Gui,tip: Font, s%FontSize% bold,% Font
+            Gui,tip: Add, Text, cWhite gGuiDestroy W%Width%,% text
+            GuiControlGet, TextSize, tip:Pos, Static1
+            Xpos := WorkAreaRight - Width - 18
+            Ypos := WorkAreaBottom - TextSizeH - 2 - 12
+            Gui,tip: Show, X%Xpos% Y%Ypos% W%Width% NA
+            SoundPlay, *-1
+            BoundFade := this.Fade.bind(this,tipHwnd,Transparent)
+            SetTimer,% BoundFade, -1
+            return
+            GuiDestroy:
+            Gui,tip: Destroy
+            return
+        }
+
+        Fade(Hwnd, Transparent)
+        {
+            diff := 0
+            while(diff < Transparent)
+            {
+                Gui,tip: +LastFound
+                WinSet, Transparent,% diff
+                diff += 3
+                Sleep, 10
+            }
+            Sleep, 3000
+            MouseGetPos, , , OutputVarWin
+            while(diff > 0)
+            {
+                MouseGetPos, , , HoveredWin
+                if(Hwnd == HoveredWin)
+                    diff := Transparent
+                Gui,tip: +LastFound
+                WinSet, Transparent,% diff
+                diff -= 3
+                Sleep, 10
+            }
+            Gui,tip: Destroy
+            return
+        }
+    }
+}
+
+class Daemon
+{
+    __new()
+    {
+        this.DaemonPID := this.StartDaemon()
+        this.flag := true
+        CheckProcess := this.CheckProcess.bind(this)
+        SetTimer, %CheckProcess%, 5000
+        OnExit(this.Recovery.bind(this), -1)
+        return this
+    }
+
+    CheckProcess()
+    {
+        ListLines,Off
+        if(!WinExist("ahk_pid" . this.DaemonPID) && this.flag)
+            this.DaemonPID := this.StartDaemon()
+    }
+
+    StartDaemon()
+    {
+        cmd := A_AhkPath . "," . A_ScriptFullPath . "," . "/invisible"
+        para := A_AhkPath . " " . "Daemon.ahk" . " " . DllCall("GetCurrentProcessId") . " " . """" . cmd . """" . " " . """" . A_WorkingDir . """"
+        Run,% para,% A_WorkingDir, UseErrorLevel, DaemonPID
+        return DaemonPID
+    }
+
+    Recovery()
+    {
+        this.flag := false
+        Run,% "TaskKill /F /PID " . this.DaemonPID,,Hide UseErrorLevel
     }
 }
 
@@ -665,23 +700,20 @@ class Component
     {
         for item,processID in this.processList
         {
+            Main.SendMessage(0x12, "ahk_pid" . processID)
             SendMessage,0x10,0,0,,% "ahk_pid" . processID
             SendMessage,0x02,0,0,,% "ahk_pid" . processID
             SendMessage,0x11,0,0,,% "ahk_pid" . processID
-            Main.SendMessage(0x12, "ahk_pid" . processID)
-            Sleep,100
-            Run,TaskKill /F /PID %processID%,,Hide UseErrorLevel
-            Sleep,100
         }
+
+        Sleep,500
         for item,processID in this.processList
         {
+            Run,TaskKill /F /PID %processID%,,Hide UseErrorLevel
             SplitPath, item, OutFileName, OutDir, , OutNameNoExt
-            if(!WinExist("ahk_pid" . processID))
-                Main.LogToFile("Exit Of " . OutNameNoExt . " Successfully")
-            else
-                Main.LogToFile("Exit Of " . OutNameNoExt . " Failed")
+            Main.LogToFile("Exit Of " . OutNameNoExt . " Successfully")
+            ;if(!WinExist("ahk_pid" . processID))
         }
-        return
     }
 }
 
@@ -815,13 +847,13 @@ class TrayMenu
 
     WindowSpy()
     {
-        Run,% A_workingdir . "\AU3_Spy.exe",% A_workingdir,UserErrorLevel
+        Run,% A_workingdir . "\AU3_Spy.exe",% A_workingdir,UseErrorLevel
         return
     }
 
     Help()
     {
-        Run,% A_workingdir . "\AutoHotkey.chm",% A_workingdir,UserErrorLevel
+        Run,% A_workingdir . "\AutoHotkey.chm",% A_workingdir,UseErrorLevel
         return
     }
 
