@@ -99,8 +99,6 @@ Hotkey_start()
         Sleep,2000
         BlockInput,Off
     }
-    else if(key = " ")
-        SendInput, {Media_Play_Pause}
     else
         SendInput,% key
 }
@@ -413,6 +411,12 @@ Capslock & Right::
 Hotkey_media_right()
 {
     SendInput,{Media_Next}
+}
+
+Capslock & Tab::
+Hotkey_media_play_pause()
+{
+    SendInput, {Media_Play_Pause}
 }
 
 Capslock & o::
