@@ -1,19 +1,17 @@
 #NoTrayIcon
 #Persistent
-#SingleInstance, off
+#SingleInstance, OFF
 
 SetWorkingDir,%A_ScriptDir%
 DetectHiddenWindows,On
 
-args:=[]
-Loop,%0%
-{
-    args.Push(%A_Index%)
-}
+args = %0%
+if (args != 3)
+    ExitApp
 
-pid := args[1]
-cmd := args[2]
-wd := args[3]
+pid = %1%
+cmd = %2%
+wd = %3%
 
 cmd := """" . StrReplace(cmd, ",", """" . " " . """") . """"
 
@@ -21,14 +19,11 @@ SetTimer, checkprocess, 5000
 
 checkprocess()
 {
-    global pid
-    global cmd
-    global wd
-
+    global
     Process, Exist,% pid
     if (ErrorLevel == 0)
     {
-        Run,% cmd,% wd, UseErroeLevel
+        Run,% cmd,% wd, UseErrorLevel
         ExitApp
     }
 }
