@@ -72,17 +72,8 @@ class Info
         this.last_time := -10000000
         this.notify := new this.Notify()
         BoundInfoReminder := this.judge.bind(this)
-        BoundInfoShow := this.show.bind(this)
         SetTimer, % BoundInfoReminder, 1500 
         return this
-    }
-
-    show()
-    {
-        if (A_TickCount - this.last_time < 5000 && A_TickCount - this.notify.click_time > 1000000)
-            this.notify.show()
-        else
-            this.notify.hide()
     }
 
     judge()
@@ -93,7 +84,7 @@ class Info
                 this.last_time := A_TickCount
         this.pre_icon_hwnds := icon_hwnds
 
-        if (A_TickCount - this.last_time < 1500 && A_TickCount - this.notify.click_time > 1000000)
+        if (A_TickCount - this.last_time < 1500 && A_TickCount - this.notify.click_time > 1000000 && WinExist("A"))
             this.notify.show()
         else
             this.notify.hide()
@@ -175,20 +166,6 @@ class Info
     }
 }
 
-class Scheduler
-{
-    __new()
-    {
-        BoundSchedulerDetector:=Scheduler.SchedulerDetector.bind(SchedulerDetector)
-        SetTimer,% BoundSchedulerDetector,5000
-        return this
-    }
-
-    SchedulerDetector()
-    {
-    }
-}
-
 class Power
 {
     __new()
@@ -226,13 +203,11 @@ class Windows
         IniRead,MouseGestures,Config.ini,WindowDetector,MouseGestures,0
         IniRead,TeamViewer,Config.ini,WindowDetector,TeamViewer,0
         IniRead,ConfidentialDocument,Config.ini,WindowDetector,ConfidentialDocument,0
-        IniRead,KwPopupRbHost,Config.ini,WindowDetector,KwPopupRbHost,0
         IniRead,ThunderPlatform,Config.ini,WindowDetector,ThunderPlatform,0
         
         Windows.MouseGesturesFlag:=MouseGestures
         Windows.TeamViewerFlag:=TeamViewer
         Windows.ConfidentialDocumentFlag:=ConfidentialDocument
-        Windows.KwPopupRbHostFlag:=KwPopupRbHost
         Windows.ThunderPlatformFlag:=ThunderPlatform
         
         BoundWindowDetector:=Windows.WindowDetector.bind(WindowDetector)
@@ -294,16 +269,6 @@ class Windows
         return
     }
 
-    KwPopupRbHost()
-    {
-        IfWinExist,ahk_class PopupRbWebDialog ahk_exe KwPopupRbHost.exe
-        {
-            WinKill,ahk_class PopupRbWebDialog ahk_exe KwPopupRbHost.exe
-            LogToFile("Close KuWo Popup Window")
-        }
-        return
-    }
-    
     ThunderPlatform()
     {
         Process, Exist, ThunderPlatform.exe
