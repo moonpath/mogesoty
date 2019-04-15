@@ -1,15 +1,13 @@
 [Monitor]
 WindowDetector=1
 NetworkDetector=0
-PowerManager=1
+PowerManager=0
 ReminderDetector=0
 InfoDetector=1
 
 [WindowDetector]
 MouseGestures=1
 TeamViewer=1
-ConfidentialDocument=1
-KwPopupRbHost=1
 ThunderPlatform=1
 
 [NetworkDetector]

@@ -202,16 +202,14 @@ class Windows
     {
         IniRead,MouseGestures,Config.ini,WindowDetector,MouseGestures,0
         IniRead,TeamViewer,Config.ini,WindowDetector,TeamViewer,0
-        IniRead,ConfidentialDocument,Config.ini,WindowDetector,ConfidentialDocument,0
         IniRead,ThunderPlatform,Config.ini,WindowDetector,ThunderPlatform,0
         
         Windows.MouseGesturesFlag:=MouseGestures
         Windows.TeamViewerFlag:=TeamViewer
-        Windows.ConfidentialDocumentFlag:=ConfidentialDocument
         Windows.ThunderPlatformFlag:=ThunderPlatform
         
         BoundWindowDetector:=Windows.WindowDetector.bind(WindowDetector)
-        SetTimer,% BoundWindowDetector,1000
+        SetTimer,% BoundWindowDetector,1500
         return this
     }
 
@@ -221,13 +219,8 @@ class Windows
             Windows.MouseGestures()
         if(Windows.TeamViewerFlag)
             Windows.TeamViewer()
-        if(Windows.ConfidentialDocumentFlag)
-            Windows.ConfidentialDocument()
-        if(Windows.KwPopupRbHostFlag)
-            Windows.KwPopupRbHost()
         if(Windows.ThunderPlatformFlag)
             Windows.ThunderPlatform()
-        return
     }
 
     MouseGestures()
@@ -255,16 +248,6 @@ class Windows
         {
             ControlSend,,{Enter},发起会话 ahk_exe TeamViewer.exe
             LogToFile("Close TeamViewer Popup Window")
-        }
-        return
-    }
-
-    ConfidentialDocument()
-    {
-        IfWinExist,hollo ahk_exe explorer.exe
-        {
-            WinKill hollo
-            LogToFile("Trying To Open The Confidential Document")
         }
         return
     }
