@@ -208,6 +208,16 @@ Hotkey_d()
     return
 }
 
+Capslock & e::
+Hotkey_e()
+{
+    if (FileExist(Clipboard))
+    {
+        SplitPath, Clipboard, OutFileName, OutDir
+        Run, cmd /c gvim -M "%OutFileName%", %OutDir%, Hide UseErrorLevel
+    }
+}
+
 Capslock & Esc::
 Hotkey_quit()
 {
@@ -493,7 +503,7 @@ Hotkey_ShiftWheelDown()
     return
 }
 
-Capslock & T::
+Capslock & t::
 Hotkey_t()
 {
     Run, powershell.exe /c "cd $ENV:USERPROFILE;"%A_ScriptDir%\Plugins\Busybox\busybox64.exe" "sh"", , UseErrorLevel
