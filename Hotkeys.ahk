@@ -287,49 +287,26 @@ Hotkey_StringTitle()
 Capslock & f::
 Hotkey_f()
 {
-    ControlGetFocus, FocusedControl, A
-    if(InStr(FileExist(path := WindowsExplorer.WindowsExplorerLocation()), "D")&&!InStr(FocusedControl,"Edit"))
-    {
+    KeyWait, Capslock
+    KeyWait, f
+    input, cmd, L1, {Enter}
+    fun := "Hotkey_" . "modify_" . cmd
+    if(IsFunc(fun))
+        %fun%()
+}
 
-        WinGetClass, activeClass, A
-        if(activeClass~="Progman|WorkerW")
-        {
-            ControlGet, NameList, List, Col1, SysListView321, A
-            NameWithoutPath:="New File"
-            while(true)
-            {
-                flag:=true
-                index:=A_Index
-                Loop, Parse, NameList, `n
-                    if(InStr(A_LoopField,NameWithoutPath))
-                    {
-                        NameWithoutPath:="New File (" . (index + 1) . ")"
-                        flag:=false
-                        break
-                    }
-                if(flag)
-                    break
-            }
-            blankFileName:=path . "\" . NameWithoutPath
-            FileAppend,,% blankFileName
-        }
-        else
-        {
-            blankFileName:=path . "\New File"
-            while(FileExist(blankFileName))
-                blankFileName:=path . "\New File (" . (A_Index + 1) . ")"
-            FileAppend,,% blankFileName
-        }
-        SplitPath, blankFileName, FileNameWithoutPath
-        WindowsExplorer.WindowsExplorerSelectItem(FileNameWithoutPath)
-        Loop, 20
-        {
-            Sleep, 100
-            SendInput, {F2}
-            ControlGetFocus, focus
-        }Until, focus = "Edit1"
-    }
-    return
+Hotkey_modify_e()
+{
+    clip_saved := ClipboardAll
+    clip_text_saved := Clipboard
+    Clipboard := ""
+    SendInput, ^{Insert}
+    ClipWait, 0
+    to_search := Clipboard
+    Clipboard := clip_saved
+    if(to_search == "" && clip_text_saved != "")
+        to_search := clip_text_saved
+    Run,% "http://dict.youdao.com/w/eng/" . ReplaceURL(to_search),,UseErrorLevel
 }
 
 Capslock & g::
@@ -380,6 +357,55 @@ Hotkey_capslock_l()
         SendInput, {End}
     else
         SendInput, {Right}
+}
+
++^m::
+Capslock & m::
+Hotkey_m()
+{
+    ControlGetFocus, FocusedControl, A
+    if(InStr(FileExist(path := WindowsExplorer.WindowsExplorerLocation()), "D")&&!InStr(FocusedControl,"Edit"))
+    {
+
+        WinGetClass, activeClass, A
+        if(activeClass~="Progman|WorkerW")
+        {
+            ControlGet, NameList, List, Col1, SysListView321, A
+            NameWithoutPath:="New File"
+            while(true)
+            {
+                flag:=true
+                index:=A_Index
+                Loop, Parse, NameList, `n
+                    if(InStr(A_LoopField,NameWithoutPath))
+                    {
+                        NameWithoutPath:="New File (" . (index + 1) . ")"
+                        flag:=false
+                        break
+                    }
+                if(flag)
+                    break
+            }
+            blankFileName:=path . "\" . NameWithoutPath
+            FileAppend,,% blankFileName
+        }
+        else
+        {
+            blankFileName:=path . "\New File"
+            while(FileExist(blankFileName))
+                blankFileName:=path . "\New File (" . (A_Index + 1) . ")"
+            FileAppend,,% blankFileName
+        }
+        SplitPath, blankFileName, FileNameWithoutPath
+        WindowsExplorer.WindowsExplorerSelectItem(FileNameWithoutPath)
+        Loop, 20
+        {
+            Sleep, 100
+            SendInput, {F2}
+            ControlGetFocus, focus
+        }Until, focus = "Edit1"
+    }
+    return
 }
 
 Capslock & n::
