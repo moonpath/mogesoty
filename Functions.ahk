@@ -1,8 +1,8 @@
-﻿;<Initialization>=======================================================
+﻿;<Initialize>=======================================================
 ;FileAttribMenu:=new FileAttribMenu()
 ;WindowStyle:=new WindowStyle()
 ContextMenu:=new ContextMenu()
-;</Initialization>======================================================
+;</Initialize>======================================================
 Goto,FunctionsEnd ;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ;<Functions>============================================================
 ClipboardBackup(target:="",flag:="",thisMenu:="")
