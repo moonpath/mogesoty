@@ -160,28 +160,34 @@ Hotkey_b()
 Capslock & c::
 Hotkey_c()
 {
-    WinGet,PID,PID,A
-    WinGet,ProcessName,ProcessName,ahk_pid %PID%
-    if(ProcessName="Explorer.EXE")
+    if(GetKeyState("Alt", "P"))
     {
-        ClipSaved := ClipBoardAll
-        ClipBoard:=""
-        SendInput, ^{Insert}
-        ClipWait,0
-        clipboard=%clipboard%
-        if(!FileExist(clipboard))
+        WinGet,PID,PID,A
+        WinGet,ProcessName,ProcessName,ahk_pid %PID%
+        if(ProcessName="Explorer.EXE")
         {
-            ClipBoard:=ClipSaved
-            return
+            ClipSaved := ClipBoardAll
+            ClipBoard:=""
+            SendInput, ^{Insert}
+            ClipWait,0
+            clipboard=%clipboard%
+            if(!FileExist(clipboard))
+            {
+                ClipBoard:=ClipSaved
+                return
+            }
         }
+        else
+        {
+            WinGet,ProcessPath,ProcessPath,ahk_pid %PID%
+            clipboard=%ProcessPath%
+        }
+        Main.Notification.Notify("Address Copied")
     }
     else
     {
-        WinGet,ProcessPath,ProcessPath,ahk_pid %PID%
-        clipboard=%ProcessPath%
+        SendInput, ^{Insert}
     }
-    Main.Notification.Notify("Address Copied")
-    return
 }
 
 Capslock & d::
@@ -562,15 +568,24 @@ Hotkey_u()
 Capslock & v::
 Hotkey_v()
 {
-    Run,Plugins\View\i_view64.exe /clippaste /silent,,UseErrorLevel
-    return
+    if(GetKeyState("Alt", "P"))
+    {
+        Run,Plugins\View\i_view64.exe /clippaste /silent,,UseErrorLevel
+    }
+    else
+    {
+        clipboard := RTrim(RTrim(clipboard, "`n"), "`r")
+        SendInput, +{Insert}
+    }
 }
 
 Capslock & x::
 Hotkey_x()
 {
-    Component.RunPlugin("Screenshot\Screenshot.exe")
-    return
+    if(GetKeyState("Alt", "P"))
+    {
+        Component.RunPlugin("Screenshot\Screenshot.exe")
+    }
 }
 
 Capslock & y::
