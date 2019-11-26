@@ -586,6 +586,10 @@ Hotkey_x()
     {
         Component.RunPlugin("Screenshot\Screenshot.exe")
     }
+    else
+    {
+        SendInput, ^x
+    }
 }
 
 Capslock & y::
