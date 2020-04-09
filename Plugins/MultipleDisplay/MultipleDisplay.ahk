@@ -16,7 +16,8 @@ ShellMessage(wParam,lParam)
     if(wParam=1 && WinExist("ahk_id" . lParam)) ;HSHELL_WINDOWCREATED
     {
         WinGetClass, current_class, A
-        if(current_class == "ForegroundStaging")
+        ;if(current_class == "ForegroundStaging")
+        if current_class in ForegroundStaging,Windows.UI.Core.CoreWindow,Progman,Shell_TrayWnd,Shell_SecondaryTrayWnd,MultitaskingViewFrame,NotifyIconOverflowWindow,WorkerW,TaskListThumbnailWnd
             return
         SysGet,monitorCount,MonitorCount
         if(MonitorCount<=1)
