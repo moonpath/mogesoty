@@ -9,7 +9,8 @@ MouseGesture_(hoveredHwnd,ClassNN)
 
 MouseGesture_L()
 {
-    Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d},,UseErrorLevel
+    SendInput,#{Tab}
+    ;Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d},,UseErrorLevel
     return
 }
 
