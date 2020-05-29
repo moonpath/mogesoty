@@ -574,7 +574,6 @@ Hotkey_v()
     }
     else
     {
-        clipboard := RTrim(RTrim(clipboard, "`n"), "`r")
         SendInput, +{Insert}
     }
 }
