@@ -160,34 +160,7 @@ Hotkey_b()
 Capslock & c::
 Hotkey_c()
 {
-    if(GetKeyState("Alt", "P"))
-    {
-        WinGet,PID,PID,A
-        WinGet,ProcessName,ProcessName,ahk_pid %PID%
-        if(ProcessName="Explorer.EXE")
-        {
-            ClipSaved := ClipBoardAll
-            ClipBoard:=""
-            SendInput, ^{Insert}
-            ClipWait,0
-            clipboard=%clipboard%
-            if(!FileExist(clipboard))
-            {
-                ClipBoard:=ClipSaved
-                return
-            }
-        }
-        else
-        {
-            WinGet,ProcessPath,ProcessPath,ahk_pid %PID%
-            clipboard=%ProcessPath%
-        }
-        Main.Notification.Notify("Address Copied")
-    }
-    else
-    {
-        SendInput, ^{Insert}
-    }
+    SendInput, ^{Insert}
 }
 
 Capslock & d::
@@ -568,27 +541,13 @@ Hotkey_u()
 Capslock & v::
 Hotkey_v()
 {
-    if(GetKeyState("Alt", "P"))
-    {
-        Run,Plugins\View\i_view64.exe /clippaste /silent,,UseErrorLevel
-    }
-    else
-    {
-        SendInput, +{Insert}
-    }
+    SendInput, +{Insert}
 }
 
 Capslock & x::
 Hotkey_x()
 {
-    if(GetKeyState("Alt", "P"))
-    {
-        Component.RunPlugin("Screenshot\Screenshot.exe")
-    }
-    else
-    {
-        SendInput, ^x
-    }
+    Component.RunPlugin("Screenshot\Screenshot.exe")
 }
 
 Capslock & y::
