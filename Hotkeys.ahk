@@ -160,7 +160,16 @@ Hotkey_b()
 Capslock & c::
 Hotkey_c()
 {
-    SendInput, ^{Insert}
+    WinGet,Hwnd,ID,A
+    WinGet,processName,ProcessName,% "ahk_id" . Hwnd
+    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe")
+    {
+        SendInput, ^{Insert}
+    }
+    else
+    {
+        SendInput, ^c
+    }
 }
 
 Capslock & d::
@@ -448,6 +457,21 @@ Hotkey_p()
     return
 }
 
+Capslock & q::
+Hotkey_q()
+{
+    clip_saved := ClipboardAll
+    clip_text_saved := Clipboard
+    Clipboard := ""
+    SendInput, ^{Insert}
+    ClipWait, 0
+    to_search := Clipboard
+    Clipboard := clip_saved
+    if(to_search == "" && clip_text_saved != "")
+        to_search := clip_text_saved
+    Run,% "https://plat-emrui-o.api.leiniao.com/gateway/cluster-topo/sparkhistory/history/" . to_search,,UseErrorLevel
+}
+
 Capslock & r::
 Hotkey_r()
 {
@@ -541,13 +565,23 @@ Hotkey_u()
 Capslock & v::
 Hotkey_v()
 {
-    SendInput, +{Insert}
+    WinGet,Hwnd,ID,A
+    WinGet,processName,ProcessName,% "ahk_id" . Hwnd
+    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe")
+    {
+        SendInput, +{Insert}
+    }
+    else
+    {
+        SendInput, ^v
+    }
 }
 
 Capslock & x::
 Hotkey_x()
 {
-    Component.RunPlugin("Screenshot\Screenshot.exe")
+    ;Component.RunPlugin("Screenshot\Screenshot.exe")
+    ;Run, Screenshot\Screenshot.exe,,UseErrorLevel
 }
 
 Capslock & y::
