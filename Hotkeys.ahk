@@ -271,7 +271,6 @@ Hotkey_StringTitle()
     return
 }
 
-+^f::
 Capslock & f::
 Hotkey_f()
 {
@@ -347,7 +346,6 @@ Hotkey_capslock_l()
         SendInput, {Right}
 }
 
-+^m::
 Capslock & m::
 Hotkey_m()
 {
@@ -663,12 +661,12 @@ Hotkey_back_slash()
     return
 }
 
-~Lshift & Rshift::
-~Rshift & Lshift::
-Hotkey_typing()
-{
-    SendInput, ^{Space}
-}
+;~Lshift & Rshift::
+;~Rshift & Lshift::
+;Hotkey_typing()
+;{
+;    SendInput, ^{Space}
+;}
 
 F1 & h::
 F1 & Left::
