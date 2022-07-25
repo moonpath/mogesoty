@@ -162,7 +162,7 @@ Hotkey_c()
 {
     WinGet,Hwnd,ID,A
     WinGet,processName,ProcessName,% "ahk_id" . Hwnd
-    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe")
+    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe|Xshell.exe")
     {
         SendInput, ^{Insert}
     }
@@ -565,7 +565,7 @@ Hotkey_v()
 {
     WinGet,Hwnd,ID,A
     WinGet,processName,ProcessName,% "ahk_id" . Hwnd
-    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe")
+    if(processName~="WindowsTerminal.exe|idea64.exe|pycharm64.exe|Tabby.exe|Xshell.exe")
     {
         SendInput, +{Insert}
     }
