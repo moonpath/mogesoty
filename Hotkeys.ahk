@@ -514,21 +514,21 @@ Hotkey_s()
         Run,% "www.google.com/search?q=" . ReplaceURL(to_search),,UseErrorLevel
 }
 
-CapsLock & WheelUp::
-Hotkey_ShiftWheelUp()
-{
-    Loop,2
-        SendInput,{PgUp}
-    return
-}
+;CapsLock & WheelUp::
+;Hotkey_ShiftWheelUp()
+;{
+;    Loop,2
+;        SendInput,{PgUp}
+;    return
+;}
 
-CapsLock & WheelDown::
-Hotkey_ShiftWheelDown()
-{
-    Loop,2
-        SendInput,{PgDn}
-    return
-}
+;CapsLock & WheelDown::
+;Hotkey_ShiftWheelDown()
+;{
+;    Loop,2
+;        SendInput,{PgDn}
+;    return
+;}
 
 Capslock & t::
 Hotkey_t()
